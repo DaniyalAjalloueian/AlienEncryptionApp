@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<title>Alien Encryption</title>
+<script>try{var t=localStorage.getItem('alien_theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}</script>
+<style>
+:root{--bg:#eef1f7;--sf:#fff;--fd:#f6f7fb;--ln:#d3d9e8;--tx:#161a2c;--mu:#566086;--ac:#a85600;--ai:#fff;--sg:#0a6a88;--er:#b3261e;--ok:#1a7a45;--tr:#9aa3c4;--ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--ti:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mo:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--gl:"Noto Sans Yi","Noto Sans Vai","Noto Sans Javanese","Noto Sans Cham","Microsoft Yi Baiti","Nirmala UI","Malgun Gothic",system-ui,sans-serif;color-scheme:light}
+:root[data-theme=dark]{--bg:#0c1120;--sf:#141a31;--fd:#0e1326;--ln:#28315a;--tx:#e8ebf8;--mu:#97a1c6;--ac:#ffb454;--ai:#1b1200;--sg:#6fdcff;--er:#ff9494;--ok:#7fe3a4;--tr:#3a4470;color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+body{font:16px/1.5 var(--ui);background:var(--bg);color:var(--tx);min-height:100dvh;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.w{max-width:1040px;margin:0 auto}[hidden]{display:none!important}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:6px 2px 18px}
+h1{font:600 clamp(24px,4.5vw,32px)/1.1 var(--ti);letter-spacing:-.01em}
+.tag{color:var(--mu);font-size:14px;margin-top:4px}
+.con{background:var(--sf);border:1px solid var(--ln);border-radius:20px;padding:clamp(14px,3vw,28px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--ln);background:var(--sf);color:var(--tx);font:600 15px var(--ui);cursor:pointer}
+.btn:hover{border-color:var(--ac)}.btn.p{background:var(--ac);border-color:var(--ac);color:var(--ai)}.btn.s{min-height:40px;padding:0 12px;font-size:14px}
+.btn.t{border:0;background:none;color:var(--ac);min-height:36px;padding:0 8px;font-size:14px}
+.busy .btn{pointer-events:none;opacity:.6}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.seg{display:flex;padding:4px;gap:4px;background:var(--fd);border:1px solid var(--ln);border-radius:12px;width:fit-content;max-width:100%}
+.seg [role=tab]{border:0;background:none;color:var(--mu);font:600 15px/1.2 var(--ui);padding:8px 16px;border-radius:9px;min-height:44px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.seg small{font:500 12px var(--mo)}.seg [aria-selected=true]{background:var(--ac);color:var(--ai)}
+@media(max-width:520px){.seg{width:100%}.seg [role=tab]{flex:1;flex-direction:column;gap:0;justify-content:center}}
+.pn{margin-top:22px}
+.lb{font-weight:600;font-size:14px}
+input[type=password],input[type=text],textarea{width:100%;background:var(--fd);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:12px 14px;font:16px/1.5 var(--mo)}
+textarea{resize:vertical;min-height:clamp(170px,28vh,300px);font-family:var(--ui)}
+input:focus-visible,textarea:focus-visible{outline:0;border-color:var(--ac);box-shadow:0 0 0 1px var(--ac)}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:8px}
+.tl{display:flex;gap:6px;flex-wrap:wrap}
+@media(max-width:620px){.row{grid-template-columns:1fr}.tl .btn{flex:1}}
+.hint{font-size:13px;color:var(--mu);margin-top:8px}.hint.w2{color:var(--er)}
+.mst{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ln);font-size:13px;color:var(--mu)}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}@media(max-width:820px){.kg{grid-template-columns:1fr}}
+.kg textarea{min-height:120px;font:16px/1.4 var(--mo);word-break:break-all}
+@media(min-width:821px){.kg textarea{font-size:13px}}
+.sec:not(:focus):not(.show){filter:blur(5px)}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;border:1px solid var(--ln);color:var(--mu)}.pill.on{color:var(--ok);border-color:var(--ok)}.pill.bad{color:var(--er);border-color:var(--er)}
+.mg{display:grid;gap:14px;margin-top:26px;grid-template-areas:"i" "a" "o"}
+@media(min-width:860px){.mg{grid-template-columns:1fr 1fr;gap:18px;grid-template-areas:"i o" "a a"}}
+.pi{grid-area:i}.pa{grid-area:a}.po{grid-area:o}.pi,.po{display:flex;flex-direction:column}.pi textarea,.po textarea{flex:1}
+.drag textarea{border-color:var(--ac)}
+#out{color:var(--sg);border-color:var(--sg);word-break:break-all}#out.m{font-family:var(--mo);font-size:15px}#out.g{font-family:var(--gl);font-size:20px;letter-spacing:.04em}
+.ft{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--mu);margin-top:8px;min-height:20px}
+#st.err{color:var(--er)}#st.ok{color:var(--ok)}
+.pa{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}
+.am{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}@media(min-width:620px){.am{width:auto;min-width:300px}}
+.sw{display:flex;gap:10px;align-items:center;cursor:pointer}.sw span{font-size:13px;color:var(--mu);line-height:1.3}.sw b{display:block;font-size:14px;color:var(--tx)}
+.sw input{appearance:none;width:44px;height:26px;border-radius:99px;background:var(--tr);position:relative;cursor:pointer;flex:none;margin:0}
+.sw input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.sw input:checked{background:var(--ac)}.sw input:checked::after{transform:translateX(18px)}
+.sw.o{margin-left:auto}@media(max-width:620px){.sw.o{margin-left:0}}
+#toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ac);color:var(--ai);padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;max-width:90vw;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;text-align:center}
+#toast.on{opacity:1}#toast.e{background:var(--er);color:var(--ai)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="w">
+<header class="top"><div><h1>🛸 Alien Encryption</h1><p class="tag">Encrypts in your browser. Nothing is sent anywhere.</p></div>
+<div class="tl"><button class="btn s" data-a="wipe" title="Clear keys, message and result from this page">Wipe</button><button class="btn s" data-a="theme" id="thm">Light</button></div></header>
+<main class="con">
+<div class="seg" role="tablist" aria-label="Encryption method">
+<button role="tab" id="t-aes" data-m="aes" aria-controls="p-aes">Passphrase <small>AES-256</small></button>
+<button role="tab" id="t-rsa" data-m="rsa" aria-controls="p-rsa">Key pair <small>RSA-2048</small></button></div>
+
+<section class="pn" id="p-aes" role="tabpanel" aria-labelledby="t-aes">
+<label class="lb" for="key">Secret key</label>
+<div class="row"><input type="password" id="key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Passphrase, or 64-character hex key">
+<div class="tl"><button class="btn s" data-a="eye">Show</button><button class="btn s" data-a="pasteKey">Paste</button><button class="btn s" data-a="gen">Random key</button><button class="btn s" data-a="copyKey">Copy</button></div></div>
+<p class="hint" id="kh"></p>
+<div class="mst"><span id="ms"></span><button class="btn t" data-a="mSave">Save as master</button><button class="btn t" data-a="mUse" id="mu">Use master</button><button class="btn t" data-a="mDel" id="md">Forget</button></div>
+</section>
+
+<section class="pn" id="p-rsa" role="tabpanel" aria-labelledby="t-rsa" hidden>
+<div class="tl"><button class="btn p s" data-a="genRsa">Generate key pair</button><button class="btn s" data-a="pem">Import .pem file</button><button class="btn s" data-a="saveKeys">Save keys</button></div>
+<div class="kg">
+<div><div class="hd"><label class="lb" for="pub">Public key</label><span class="pill" id="pp">Not set</span></div><textarea id="pub" spellcheck="false" placeholder="Paste a public key to encrypt for someone"></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="cp" data-t="pub">Copy</button><button class="btn s" data-a="pst" data-t="pub">Paste</button></div><p class="hint">Share this. Anyone with it can write messages only you can read. Compare the fingerprint with the owner to confirm the key is genuine.</p><p class="hint" id="fp" style="font-family:var(--mo)"></p></div>
+<div><div class="hd"><label class="lb" for="priv">Private key</label><span class="pill" id="vp">Not set</span></div><textarea id="priv" class="sec" spellcheck="false" placeholder="Needed to decrypt. Keep it secret."></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="showPriv">Reveal</button><button class="btn s" data-a="cp" data-t="priv">Copy</button><button class="btn s" data-a="pst" data-t="priv">Paste</button></div></div>
+</div></section>
+
+<div class="mg">
+<div class="pi"><div class="hd"><label class="lb" for="inp">Message</label><div class="tl"><button class="btn s" data-a="open">Open file</button><button class="btn s" data-a="pst" data-t="inp">Paste</button></div></div>
+<textarea id="inp" placeholder="Type text to encrypt, or paste an encrypted message to decrypt. You can also drop a text file here."></textarea><div class="ft"><span id="ci">0 characters</span><span>Ctrl+Enter encrypts</span></div></div>
+<div class="pa"><div class="am"><button class="btn p" data-a="enc">Encrypt</button><button class="btn" data-a="dec">Decrypt</button></div>
+<button class="btn" data-a="swap" title="Move the result into the message box">Swap</button><button class="btn" data-a="clr">Clear</button>
+<label class="sw o"><input type="checkbox" id="al" role="switch" checked><span><b>Alien script</b>Glyphs instead of Base64</span></label>
+<label class="sw"><input type="checkbox" id="ca" role="switch"><span><b>Copy after encrypting</b>Puts the result on your clipboard</span></label><label class="sw"><input type="checkbox" id="ik" role="switch"><span><b>Auto-clear when idle</b>Wipes this page after 5 minutes</span></label></div>
+<div class="po"><div class="hd"><label class="lb" for="out">Result</label><div class="tl"><button class="btn s" data-a="copyOut">Copy</button><button class="btn s" data-a="share" id="shr">Share</button><button class="btn s" data-a="save">Save .txt</button></div></div>
+<textarea id="out" readonly placeholder="The result appears here."></textarea><div class="ft"><span id="co"></span><span id="st" role="status" aria-live="polite"></span></div></div>
+</div>
+</main></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id),te=new TextEncoder(),td=new TextDecoder(),RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const st={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
+const cat=(...a)=>{const o=new Uint8Array(a.reduce((n,x)=>n+x.length,0));let p=0;for(const x of a){o.set(x,p);p+=x.length}return o};
+const hex=b=>[...b].map(x=>x.toString(16).padStart(2,'0')).join(''),unhex=h=>Uint8Array.from(h.match(/../g)||[],x=>parseInt(x,16));
+const b64=b=>{let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s)};
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0)),rand=n=>crypto.getRandomValues(new Uint8Array(n));
+/* Alien alphabet: unchanged, so old messages still decode */
+const G=[...'ꗃꘘꖙꕷꔠꓴꒀꑊꐻꏫꎻꍡꌷꋗꊡꉣꈦꇵꆟꅢꄯꃒꂵꁰꀫ꒻꒺꒴꒱꒭꒩꒡ꔕꔻꕅꕻꖝꖵꗋꗵ꘍꘦ꙌꙬꚐꚶꛗ꛺꜏ꜰꝃꝰ꞉Ꞿꟷꠃ꠱ꡍ꡺ꢕꢽꣲꤌꤧꥃꥬꦇꦶ꧕ꧾꨑ꨼ꩢꪄꪱꫂꫨꬍꬵꭄꭲꭿ꯱꯿ힼힺힸힶힴힲힰ힮힬힪힨힦힤힢힠힞힜힚힘힖힔힒힐힎힌힊히힆힄힂힀ힾ꿾꿼꿺꿸꿶꿴꿲꿰꿮꿬꿪꿨꿦꿤꿢꿠꿞꿜꿚꿘꿖꿔꿒꿐꿎꿌꿊꿈꿆꿄꿂꿀꾾꾼꾺꾸꾶꾴꾲꾰꾮꾬꾪꾨꾦꾤꾢꾠꾞꾜꾚꾘꾖꾔꾒꾐꾎꾌꾊꾈꾆꾄꾂꾀껾껼껺껸껶껴껲껰껮껬껪껨껦껤껢껠껞껜껚께껖껔껒껐껎껌껊껈껆껄껂껀꺾꺼꺺꺸꺶꺴꺲꺰꺮꺬꺪꺨꺦꺤꺢꺠꺞꺜꺚꺘꺖꺔꺒꺐꺎꺌꺊꺈꺆꺄꺂꺀꽾꽼꽺꽸꽶꽴꽲꽰꽮꽬꽪꽨'],SEP=[...'꧁꧂꧃꧄꧅꧆꧇꧈'],R=new Map(G.map((g,i)=>[g,i])),sh=i=>(i*7+13)%37;
+const gEnc=b=>{let o='',s=0;b.forEach((v,i)=>{o+=G[(v+sh(i))&255];if((i+1)%8===0)o+=SEP[s++%8]});return o};
+const gDec=t=>{const o=[];let i=0;for(const c of t){const v=R.get(c);if(v!==undefined)o.push((v-sh(i++)+256)&255)}return Uint8Array.from(o)};
+const isG=t=>{for(const c of t)if(R.has(c))return true;return false};
+class E extends Error{constructor(m,el,c){super(m);this.el=el;this.clear=c}}
+const M={format:"This doesn't look like a message from this app, or part of it is missing.",rsa:'This is a key pair message. Switch to Key pair to open it.',aes:'This is a passphrase message. Switch to Passphrase to open it.',legacy:'This passphrase message came from an older version. It only opens in the browser that made it.',used:'This one-time message was already opened on this device.',wrong:"Couldn't decrypt. The key is wrong, or the message was changed.",wrongR:"Couldn't decrypt. It was encrypted for a different key pair."};
+const fail=(k,el)=>{throw new E(M[k],el,true)};
+const pack=(raw,alien)=>{const s=b64(raw);return alien?gEnc(te.encode(s)):s};
+const unpack=t=>{t=t.trim();try{return unb64(isG(t)?td.decode(gDec(t)):t.replace(/\s+/g,''))}catch{fail('format')}};
+const isHex=k=>/^[0-9a-fA-F]{64}$/.test(k);
+const kdf=async(p,salt)=>{const k=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveBits']);return new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:600000,hash:'SHA-256'},k,256))};
+/* Layout: [flags][salt 16 if flags&2][iv 12][ciphertext]. flags: 2 = salted passphrase (1 was one-time, now ignored) */
+async function seal(text,key,salt){const k=await crypto.subtle.importKey('raw',key,'AES-GCM',false,['encrypt']),iv=rand(12);return cat(Uint8Array.of(salt?2:0),salt||new Uint8Array(0),iv,new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(text))))}
+async function open(d,keyFor){const f=d[0];if(d.length<29||f>3)fail(f==123?'rsa':'format');let p=1,salt=null;if(f&2){salt=d.slice(1,17);p=17}const iv=d.slice(p,p+12);const k=await crypto.subtle.importKey('raw',await keyFor(salt),'AES-GCM',false,['decrypt']);let pt;try{pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},k,d.slice(p+12))}catch{fail('wrong')}return{text:td.decode(pt)}}
+const legacy=async p=>{let s;try{s=st.get('alien_salt_'+btoa(p).substring(0,16))}catch{}if(!s)fail('legacy',$('key'));return kdf(p,unhex(s))};
+/* RSA */
+const OA={name:'RSA-OAEP',hash:'SHA-256'};let pub=null,priv=null;
+const pem=(d,l)=>`-----BEGIN ${l}-----\n${b64(new Uint8Array(d)).match(/.{1,64}/g).join('\n')}\n-----END ${l}-----`;
+const unpem=(t,l)=>{const m=t.match(new RegExp(`-----BEGIN ${l}-----([\\s\\S]*?)-----END ${l}-----`));return m?unb64(m[1].replace(/\s+/g,'')):null};
+async function loadPub(t){t=t.trim();if(!t){pub=null;return}const d=unpem(t,'PUBLIC KEY');if(!d)throw new E('Not a public key. It should start with BEGIN PUBLIC KEY.');pub=await crypto.subtle.importKey('spki',d,OA,true,['encrypt'])}
+async function loadPriv(t){t=t.trim();if(!t){priv=null;return}const d=unpem(t,'PRIVATE KEY');if(!d)throw new E(/RSA PRIVATE/.test(t)?'Convert this key to PKCS#8 (BEGIN PRIVATE KEY).':'Not a private key. It should start with BEGIN PRIVATE KEY.');priv=await crypto.subtle.importKey('pkcs8',d,OA,true,['decrypt']);
+ if(!$('pub').value.trim()){const j=await crypto.subtle.exportKey('jwk',priv);pub=await crypto.subtle.importKey('jwk',{kty:'RSA',n:j.n,e:j.e,alg:'RSA-OAEP-256',ext:true},OA,true,['encrypt']);$('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY')}}
+
+/* ---------- UI ---------- */
+let mode='aes',out='',kind='text',busy=false,af=0,tt;
+const toast=(m,e)=>{const t=$('toast');t.textContent=m;t.className='on'+(e?' e':'');clearTimeout(tt);tt=setTimeout(()=>t.className='',e?4000:2000)};
+const status=(m,k)=>{const s=$('st');s.textContent=m;s.className=k||''};
+const count=()=>{const v=$('inp').value.trim(),c=v.length>20&&(isG(v)||/^[A-Za-z0-9+/=\s]{60,}$/.test(v));document.querySelector('[data-a=enc]').classList.toggle('p',!c);document.querySelector('[data-a=dec]').classList.toggle('p',c);const n=$('inp').value.length;$('ci').textContent=n.toLocaleString()+' characters';$('co').textContent=out?out.length.toLocaleString()+' characters':''};
+function show(t,k,anim){out=t;kind=k;const o=$('out');o.className=k=='text'?'':isG(t)?'g':'m';cancelAnimationFrame(af);o.value=t;
+ if(anim&&!RM&&t){const s=performance.now(),d=Math.min(900,300+t.length*2),P=isG(t)?G:[...'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'];
+  const f=n=>{const p=(n-s)/d;if(p>=1){o.value=t;return}let x='';for(let i=0;i<14;i++)x+=P[Math.random()*P.length|0];o.value=t.slice(0,Math.floor(p*t.length))+x;af=requestAnimationFrame(f)};af=requestAnimationFrame(f)}count()}
+async function copy(t){if(!t)return toast('Nothing to copy');try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.append(a);a.select();document.execCommand('copy');a.remove()}toast('Copied')}
+async function paste(el){try{el.value=await navigator.clipboard.readText();el.dispatchEvent(new Event('input'));toast('Pasted')}catch{el.focus();toast('Clipboard blocked. Paste with your keyboard.')}}
+function dl(n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1e3)}
+function pick(accept,fn){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=async()=>{const f=i.files[0];if(!f)return;if(f.size>2e6)return toast('File too large (2 MB max)',1);fn(await f.text())};i.click()}
+async function run(msg,fn){if(busy)return;busy=true;document.body.classList.add('busy');status(msg);await new Promise(r=>setTimeout(r,30));
+ try{await fn()}catch(e){if(e instanceof E){status(e.message,'err');toast(e.message,1);e.clear&&show('','text');e.el&&e.el.focus()}else{console.error(e);status('Something went wrong: '+e.message,'err')}}finally{busy=false;document.body.classList.remove('busy')}}
+function setMode(m){mode=m;st.set('alien_mode',m);for(const x of['aes','rsa']){const s=m==x;$('t-'+x).setAttribute('aria-selected',s);$('t-'+x).tabIndex=s?0:-1;$('p-'+x).hidden=!s}}
+function hint(){const k=$('key').value.trim(),h=$('kh');h.className='hint';
+ h.textContent=!k?'Use a passphrase, or make a random 256-bit key with Random key.':isHex(k)?'256-bit key, used as is.':k.length<10?'Short passphrase. A longer one is safer.':'Passphrase, stretched with PBKDF2 (600,000 rounds). Encrypting takes a moment.';
+ if(k&&!isHex(k)&&k.length<10)h.classList.add('w2')}
+function master(){const h=!!st.get('alien_master_key');$('ms').textContent=h?'Master key saved in this browser, unencrypted.':'No master key saved.';$('mu').hidden=$('md').hidden=!h}
+async function fp(){const e=$('fp');if(!pub){e.textContent='';return}const h=hex(new Uint8Array(await crypto.subtle.digest('SHA-256',await crypto.subtle.exportKey('spki',pub))));e.textContent='Fingerprint: '+h.slice(0,32).match(/.{4}/g).join(' ')}
+function pills(){fp();for(const[p,k,t]of[['pp',pub,'Ready to encrypt'],['vp',priv,'Ready to decrypt']]){const e=$(p);if(e.dataset.bad){e.className='pill bad';e.textContent='Invalid'}else{e.className='pill'+(k?' on':'');e.textContent=k?t:'Not set'}}}
+async function keyText(w){const el=$(w),bad=w=='pub'?'pp':'vp';try{await(w=='pub'?loadPub:loadPriv)(el.value);delete $(bad).dataset.bad}catch(e){w=='pub'?pub=null:priv=null;$(bad).dataset.bad=1;status(e.message||'Invalid key','err')}pills()}
+const secret=()=>{const k=$('key').value.trim();if(!k)throw new E('Enter a passphrase or key first.',$('key'));return k};
+async function encrypt(){const t=$('inp').value;if(!t.trim())throw new E('Type a message to encrypt first.',$('inp'));let raw,how;
+ if(mode=='aes'){const k=secret();how='AES-256-GCM';if(isHex(k))raw=await seal(t,unhex(k));else{const s=rand(16);raw=await seal(t,await kdf(k,s),s)}}
+ else{if(!pub)throw new E('Add a public key first, or generate a key pair.',$('pub'));how='RSA-2048 + AES-256-GCM';const k=rand(32),w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,k));raw=te.encode(JSON.stringify({k:b64(w),d:b64(await seal(t,k))}))}
+ const alien=$('al').checked;show(pack(raw,alien),'cipher',alien);status('Encrypted with '+how+'.','ok');if($('ca').checked)copy(out)}
+async function decrypt(){const t=$('inp').value;if(!t.trim())throw new E('Paste an encrypted message first.',$('inp'));let r;
+ if(mode=='aes'){const k=secret(),d=unpack(t);r=await open(d,async s=>s?kdf(k,s):isHex(k)?unhex(k):legacy(k))}
+ else{if(!priv)throw new E('Add your private key first.',$('priv'));const d=unpack(t);let j,key;try{j=JSON.parse(td.decode(d));if(!j.k||!j.d)throw 0}catch{fail(d[0]<=3?'aes':'format')}
+  try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,unb64(j.k)))}catch{fail('wrongR')}r=await open(unb64(j.d),async()=>key)}
+ show(r.text,'text');status('Decrypted.','ok')}
+const A={
+ theme(){const d=document.documentElement,n=d.dataset.theme=='dark'?'light':'dark';d.dataset.theme=n;st.set('alien_theme',n);$('thm').textContent=n=='dark'?'Light':'Dark'},
+ eye(b){const k=$('key'),s=k.type=='password';k.type=s?'text':'password';b.textContent=s?'Hide':'Show'},
+ pasteKey(){paste($('key'))},copyKey(){copy($('key').value)},
+ gen(){$('key').value=hex(rand(32));$('key').type='text';document.querySelector('[data-a=eye]').textContent='Hide';hint();toast('Random key made. Store it safely; messages need it.')},
+ mSave(){const k=$('key').value.trim();if(!k)return toast('Enter a key first',1);st.set('alien_master_key',k);master();toast('Master key saved')},
+ mUse(){$('key').value=st.get('alien_master_key')||'';hint();toast('Master key loaded')},
+ mDel(){st.del('alien_master_key');master();toast('Master key removed')},
+ genRsa(){run('Generating RSA-2048 keys…',async()=>{const k=await crypto.subtle.generateKey({...OA,modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']);pub=k.publicKey;priv=k.privateKey;
+  $('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY');$('priv').value=pem(await crypto.subtle.exportKey('pkcs8',priv),'PRIVATE KEY');delete $('pp').dataset.bad;delete $('vp').dataset.bad;pills();status('Key pair ready.','ok')})},
+ pem(){pick('.pem,.key,.txt,text/plain',async t=>{const b=unpem(t,'PRIVATE KEY')?'priv':null,c=unpem(t,'PUBLIC KEY')?'pub':null;if(!b&&!c)return toast('No PEM key found in that file',1);
+  if(c)$('pub').value=t.match(/-----BEGIN PUBLIC KEY-----[\s\S]*?-----END PUBLIC KEY-----/)[0];if(b)$('priv').value=t.match(/-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----/)[0];
+  if(c)await keyText('pub');if(b)await keyText('priv');toast('Key imported')})},
+ saveKeys(){const a=$('priv').value.trim(),b=$('pub').value.trim();if(!a&&!b)return toast('No keys to save',1);if(a)dl('private_key.pem',a);if(b)setTimeout(()=>dl('public_key.pem',b),300);toast('Saved. Keep private_key.pem secret.')},
+ cp(b){copy($(b.dataset.t).value)},pst(b){paste($(b.dataset.t))},
+ showPriv(b){const s=$('priv').classList.toggle('show');b.textContent=s?'Hide':'Reveal'},
+ open(){pick('.txt,.md,.json,.csv,text/*',t=>{$('inp').value=t;count()})},
+ enc(){run('Encrypting…',encrypt)},dec(){run('Decrypting…',decrypt)},
+ swap(){const a=$('inp').value,b=out;$('inp').value=b;show(a,isG(a)||/^[A-Za-z0-9+/=\s]{60,}$/.test(a)?'cipher':'text');status('')},
+ clr(){$('inp').value='';show('','text');status('')},
+ wipe(){for(const i of['key','pub','priv','inp'])$(i).value='';pub=priv=null;show('','text');status('');hint();pills();toast('Cleared from this page')},
+ share(){out?navigator.share({text:out}).catch(()=>{}):toast('Nothing to share')},
+ copyOut(){copy(out)},save(){out?dl('alien-message.txt',out):toast('Nothing to save')}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)A[b.dataset.a](b)});
+document.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
+document.querySelector('.seg').addEventListener('keydown',e=>{if(e.key!='ArrowLeft'&&e.key!='ArrowRight')return;const m=mode=='aes'?'rsa':'aes';setMode(m);$('t-'+m).focus();e.preventDefault()});
+$('inp').addEventListener('input',count);$('key').addEventListener('input',hint);
+$('inp').addEventListener('keydown',e=>{if(e.key=='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();A[e.shiftKey?'dec':'enc']()}});
+let kt={};for(const w of['pub','priv']){$(w).addEventListener('input',()=>{clearTimeout(kt[w]);kt[w]=setTimeout(()=>keyText(w),350)})}
+const dz=document.querySelector('.pi');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',async e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(!f)return;if(f.size>2e6)return toast('File too large (2 MB max)',1);$('inp').value=await f.text();count()});
+$('al').checked=st.get('alien_script')!=='0';$('al').addEventListener('change',()=>st.set('alien_script',$('al').checked?'1':'0'));
+$('shr').hidden=!navigator.share;$('ik').checked=st.get('alien_idle')==='1';$('ik').addEventListener('change',()=>st.set('alien_idle',$('ik').checked?'1':'0'));
+let idle;['pointerdown','keydown','input'].forEach(v=>addEventListener(v,()=>{clearTimeout(idle);if($('ik').checked)idle=setTimeout(()=>{A.wipe();toast('Cleared after 5 minutes idle')},3e5)},{passive:true}));
+$('thm').textContent=document.documentElement.dataset.theme=='dark'?'Light':'Dark';
+setMode(st.get('alien_mode')=='rsa'?'rsa':'aes');hint();master();pills();count();
+if(!crypto.subtle)status('Encryption needs a secure context: open this file over https or localhost.','err');
+</script>
+</body>
+</html>
