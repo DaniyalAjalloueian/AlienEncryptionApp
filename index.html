@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="color-scheme" content="dark light">
+<meta name="color-scheme" content="dark light"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c1120"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#eef1f7">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛸%3C/text%3E%3C/svg%3E">
 <title>Alien Encryption</title>
 <script>try{var t=localStorage.getItem('alien_theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}</script>
 <style>
@@ -58,23 +59,39 @@ input:focus-visible,textarea:focus-visible{outline:0;border-color:var(--ac);box-
 #toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ac);color:var(--ai);padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;max-width:90vw;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;text-align:center}
 #toast.on{opacity:1}#toast.e{background:var(--er);color:var(--ai)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.sel{width:100%;margin-top:6px;background:var(--fd);color:var(--tx);border:1px solid var(--ln);border-radius:12px;padding:12px;font:15px var(--ui)}
+.kx{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}@media(max-width:820px){.kx{grid-template-columns:1fr}}
+.card{background:var(--fd);border:1px solid var(--ln);border-radius:14px;padding:14px}.card h3{font:600 15px var(--ui)}.card .hint{margin-top:2px}
+.card textarea{min-height:90px;font:13px/1.4 var(--mo);word-break:break-all;margin-top:8px}.card .tl{margin-top:8px}
+.dzn{display:block;margin-top:10px;border:2px dashed var(--ln);border-radius:14px;padding:22px 14px;text-align:center;color:var(--mu);cursor:pointer;font-size:14px}.dzn:hover,.dzn.drag{border-color:var(--ac);color:var(--tx)}.dzn b{display:block;color:var(--tx);font-size:15px}
+.fi{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;background:var(--fd);border:1px solid var(--ln);border-radius:12px}.fx{font-size:22px}.fn{flex:1;min-width:0}.fn b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fn small{font-size:12px;color:var(--mu)}.fn small.er{color:var(--er)}
+#fz .tl{margin-top:12px}
+dialog{margin:auto;max-width:92vw}dialog::backdrop{background:rgba(0,0,0,.55)}
+html{-webkit-text-size-adjust:100%}
+.top{flex-wrap:wrap}.hint,.fn small,#st,.ft{overflow-wrap:anywhere}.sel{font-size:16px}
+.fi{flex-wrap:wrap}.fn{flex:1 1 140px}dialog{max-height:92dvh;overflow:auto}
+@media(max-width:820px){.card textarea{font-size:16px}}
+@media(max-width:520px){.con{border-radius:16px;padding:12px}.seg [role=tab]{padding:8px 4px;font-size:14px;min-width:0}.seg small{font-size:11px}.tl .btn.s{flex:1 1 auto}.kx,.kg{gap:12px}.hd{align-items:flex-start}.fi .btn.t{margin-left:auto}}
+@media(max-width:380px){h1{font-size:22px}.btn{padding:0 12px}}
+@media(max-height:500px) and (orientation:landscape){textarea{min-height:110px}}
 </style>
 </head>
 <body>
 <div class="w">
-<header class="top"><div><h1>🛸 Alien Encryption</h1><p class="tag">Encrypts in your browser. Nothing is sent anywhere.</p></div>
-<div class="tl"><button class="btn s" data-a="wipe" title="Clear keys, message and result from this page">Wipe</button><button class="btn s" data-a="theme" id="thm">Light</button></div></header>
+<header class="top"><div><h1>🛸 Alien Encryption</h1><p class="tag">Everything is encrypted in your browser. Your data never leaves it.</p></div>
+<div class="tl"><button class="btn s" data-a="wipeAsk" title="Clear keys, message and result from this page">Wipe</button><button class="btn s" data-a="theme" id="thm">Light</button></div></header>
 <main class="con">
 <div class="seg" role="tablist" aria-label="Encryption method">
 <button role="tab" id="t-aes" data-m="aes" aria-controls="p-aes">Passphrase <small>AES-256</small></button>
-<button role="tab" id="t-rsa" data-m="rsa" aria-controls="p-rsa">Key pair <small>RSA-2048</small></button></div>
+<button role="tab" id="t-rsa" data-m="rsa" aria-controls="p-rsa">Key pair <small>RSA-2048</small></button>
+<button role="tab" id="t-kx" data-m="kx" aria-controls="p-kx">Key exchange <small>ECDH · PQ</small></button></div>
 
 <section class="pn" id="p-aes" role="tabpanel" aria-labelledby="t-aes">
 <label class="lb" for="key">Secret key</label>
 <div class="row"><input type="password" id="key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Passphrase, or 64-character hex key">
 <div class="tl"><button class="btn s" data-a="eye">Show</button><button class="btn s" data-a="pasteKey">Paste</button><button class="btn s" data-a="gen">Random key</button><button class="btn s" data-a="copyKey">Copy</button></div></div>
 <p class="hint" id="kh"></p>
-<div class="mst"><span id="ms"></span><button class="btn t" data-a="mSave">Save as master</button><button class="btn t" data-a="mUse" id="mu">Use master</button><button class="btn t" data-a="mDel" id="md">Forget</button></div>
+<div class="mst"><span id="ms"></span><button class="btn t" data-a="mSave">Save as master</button><button class="btn t" data-a="mUse" id="mu">Use master</button><button class="btn t" data-a="mLock" id="ml">Lock it</button><button class="btn t" data-a="mDel" id="md">Forget</button></div>
 </section>
 
 <section class="pn" id="p-rsa" role="tabpanel" aria-labelledby="t-rsa" hidden>
@@ -84,9 +101,25 @@ input:focus-visible,textarea:focus-visible{outline:0;border-color:var(--ac);box-
 <div><div class="hd"><label class="lb" for="priv">Private key</label><span class="pill" id="vp">Not set</span></div><textarea id="priv" class="sec" spellcheck="false" placeholder="Needed to decrypt. Keep it secret."></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="showPriv">Reveal</button><button class="btn s" data-a="cp" data-t="priv">Copy</button><button class="btn s" data-a="pst" data-t="priv">Paste</button></div></div>
 </div></section>
 
-<div class="mg">
-<div class="pi"><div class="hd"><label class="lb" for="inp">Message</label><div class="tl"><button class="btn s" data-a="open">Open file</button><button class="btn s" data-a="pst" data-t="inp">Paste</button></div></div>
-<textarea id="inp" placeholder="Type text to encrypt, or paste an encrypted message to decrypt. You can also drop a text file here."></textarea><div class="ft"><span id="ci">0 characters</span><span>Ctrl+Enter encrypts</span></div></div>
+<section class="pn" id="p-kx" role="tabpanel" aria-labelledby="t-kx" hidden>
+<label class="lb" for="kp">Protocol</label>
+<select id="kp" class="sel"><option value="h">Hybrid: ECDH P-256 + ML-KEM-768 (post-quantum)</option><option value="c">Classic: ECDH P-256</option></select>
+<label class="sw" style="margin-top:12px"><input type="checkbox" id="ka" role="switch"><span><b>Alien glyphs</b>Show codes as glyphs instead of Base64 (QR always uses Base64)</span></label>
+<p class="hint">No server. Swap two codes over any other app (chat, email, call) and both of you end up with the same secret. Hybrid stays safe even if one of the two algorithms is broken, but needs internet once to load the ML-KEM library. Nothing of yours is sent.</p>
+<div class="kx">
+<div class="card"><h3>1. I start</h3><p class="hint">Make an offer, send it to your friend, then paste their reply.</p><div class="tl"><button class="btn p s" data-a="kxStart">Make offer</button><button class="btn s" data-a="cp" data-t="ko">Copy offer</button><button class="btn s" data-a="qShow" data-t="ko">QR</button></div>
+<textarea id="ko" readonly placeholder="Your offer appears here"></textarea>
+<textarea id="kr" spellcheck="false" placeholder="Paste their reply here"></textarea><div class="tl"><button class="btn s" data-a="pst" data-t="kr">Paste</button><button class="btn s" data-a="qScan" data-t="kr">Scan QR</button><button class="btn p s" data-a="kxFinish">Finish</button></div></div>
+<div class="card"><h3>2. They started</h3><p class="hint">Paste the offer you received, then send the reply back.</p><div class="tl"><button class="btn s" data-a="pst" data-t="kt">Paste offer</button><button class="btn s" data-a="qScan" data-t="kt">Scan QR</button><button class="btn p s" data-a="kxRespond">Make reply</button></div>
+<textarea id="kt" spellcheck="false" placeholder="Paste their offer here"></textarea>
+<textarea id="kb" readonly placeholder="Your reply appears here"></textarea><div class="tl"><button class="btn s" data-a="cp" data-t="kb">Copy reply</button><button class="btn s" data-a="qShow" data-t="kb">QR</button></div></div>
+</div>
+<div class="card" id="kres" hidden style="margin-top:16px"><h3>✅ Shared secret ready</h3><p class="hint" id="kc"></p><p class="hint">Read the check code aloud to each other. If it differs, someone tampered with the codes: start again.</p><div class="tl"><button class="btn p s" data-a="kxUse">Use as my key</button><button class="btn s" data-a="kxCopy">Copy secret</button></div></div>
+</section>
+
+<div class="mg" id="mg">
+<div class="pi"><div class="hd"><label class="lb" for="inp">Message</label><div class="tl"><button class="btn s" data-a="open">Add files</button><button class="btn s" data-a="pst" data-t="inp">Paste</button></div></div>
+<textarea id="inp" placeholder="Type text to encrypt, or paste an encrypted message to decrypt. Drop any file here to encrypt it as a file."></textarea><div class="ft"><span id="ci">0 characters</span><span>Ctrl+Enter encrypts</span></div></div>
 <div class="pa"><div class="am"><button class="btn p" data-a="enc">Encrypt</button><button class="btn" data-a="dec">Decrypt</button></div>
 <button class="btn" data-a="swap" title="Move the result into the message box">Swap</button><button class="btn" data-a="clr">Clear</button>
 <label class="sw o"><input type="checkbox" id="al" role="switch" checked><span><b>Alien script</b>Glyphs instead of Base64</span></label>
@@ -94,7 +127,25 @@ input:focus-visible,textarea:focus-visible{outline:0;border-color:var(--ac);box-
 <div class="po"><div class="hd"><label class="lb" for="out">Result</label><div class="tl"><button class="btn s" data-a="copyOut">Copy</button><button class="btn s" data-a="share" id="shr">Share</button><button class="btn s" data-a="save">Save .txt</button></div></div>
 <textarea id="out" readonly placeholder="The result appears here."></textarea><div class="ft"><span id="co"></span><span id="st" role="status" aria-live="polite"></span></div></div>
 </div>
+<section class="pn" id="fz"><div class="hd"><span class="lb">Files</span><span class="hint" style="margin:0">Any type. Uses the key or key pair set above.</span></div>
+<div class="hd" style="margin-top:6px"><span class="lb">Output format</span><div class="seg" id="fmt" role="tablist" aria-label="Output format"><button role="tab" data-v="1">👽 Alien glyphs <small>.enc.alien</small></button><button role="tab" data-v="0">📦 Binary <small>.enc</small></button></div></div>
+<div class="dzn" id="dzn" tabindex="0" role="button"><b>Drop files or folders here</b>or tap to choose (photos, videos, PDFs, zips, anything)</div>
+<div class="tl"><button class="btn s" data-a="open">Add files</button><button class="btn s" data-a="fold">Add folder</button></div>
+<div id="fl"></div>
+<div class="tl" style="gap:18px"><label class="sw"><input type="checkbox" id="fcz" role="switch"><span><b>Compress first</b>Smaller files. Best for documents, text, code</span></label><label class="sw"><input type="checkbox" id="fas" role="switch"><span><b>Auto-save</b>Download each file when it's done</span></label></div>
+<div class="tl"><button class="btn p" data-a="fEnc">Encrypt files</button><button class="btn" data-a="fDec">Decrypt files</button><button class="btn" data-a="fAll">Save all</button><button class="btn t" data-a="fClr">Clear list</button></div>
+<p class="hint">A folder becomes one archive: <b>my_folder.enc.alien</b> or <b>my_folder.enc</b>. Decrypting gives you <b>my_folder.zip</b>, which any device can open. Alien glyphs: 30 MB max. Binary: up to 4 GB (folders 500 MB). Original names are restored when you decrypt.</p></section>
 </main></div>
+<dialog id="qd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;max-width:92vw">
+<div id="qv" hidden style="text-align:center"><img id="qi" alt="QR code" style="image-rendering:pixelated;background:#fff;width:min(420px,80vw)"><p class="hint">Your friend opens Scan QR and points the camera here, or you send them a screenshot.</p></div>
+<div id="qc" hidden><video id="qvid" playsinline muted style="width:min(420px,80vw);border-radius:12px"></video><p class="hint" id="qm">Point the camera at the QR code.</p><div class="tl"><button class="btn s" data-a="qImg">Choose image</button></div></div>
+<div class="tl" style="margin-top:10px"><button class="btn p s" data-a="qClose">Close</button></div></dialog>
+<dialog id="vd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;width:min(380px,92vw)">
+<b id="vt">Vault password</b><p class="hint">This password locks your master key inside this browser. If you forget it, the saved key cannot be recovered.</p>
+<input type="password" id="vpw" autocomplete="off" placeholder="Vault password" style="margin-top:8px"><input type="password" id="vpw2" autocomplete="off" placeholder="Repeat password" style="margin-top:8px" hidden>
+<p class="hint w2" id="ve"></p><div class="tl" style="margin-top:10px"><button class="btn p s" id="vgo">Continue</button><button class="btn s" id="vno">Cancel</button></div></dialog>
+<dialog id="cd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;width:min(380px,92vw)">
+<b id="ct"></b><p class="hint" id="cb"></p><div class="tl" style="margin-top:12px"><button class="btn p s" id="cy">Confirm</button><button class="btn s" id="cn">Cancel</button></div></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 'use strict';
@@ -117,8 +168,10 @@ const unpack=t=>{t=t.trim();try{return unb64(isG(t)?td.decode(gDec(t)):t.replace
 const isHex=k=>/^[0-9a-fA-F]{64}$/.test(k);
 const kdf=async(p,salt)=>{const k=await crypto.subtle.importKey('raw',te.encode(p),'PBKDF2',false,['deriveBits']);return new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:600000,hash:'SHA-256'},k,256))};
 /* Layout: [flags][salt 16 if flags&2][iv 12][ciphertext]. flags: 2 = salted passphrase (1 was one-time, now ignored) */
-async function seal(text,key,salt){const k=await crypto.subtle.importKey('raw',key,'AES-GCM',false,['encrypt']),iv=rand(12);return cat(Uint8Array.of(salt?2:0),salt||new Uint8Array(0),iv,new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,te.encode(text))))}
-async function open(d,keyFor){const f=d[0];if(d.length<29||f>3)fail(f==123?'rsa':'format');let p=1,salt=null;if(f&2){salt=d.slice(1,17);p=17}const iv=d.slice(p,p+12);const k=await crypto.subtle.importKey('raw',await keyFor(salt),'AES-GCM',false,['decrypt']);let pt;try{pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},k,d.slice(p+12))}catch{fail('wrong')}return{text:td.decode(pt)}}
+async function sealB(b,key,salt){const k=await crypto.subtle.importKey('raw',key,'AES-GCM',false,['encrypt']),iv=rand(12);return cat(Uint8Array.of(salt?2:0),salt||new Uint8Array(0),iv,new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,b)))}
+const seal=(text,key,salt)=>sealB(te.encode(text),key,salt);
+async function openB(d,keyFor){const f=d[0];if(d.length<29||f>3)fail(f==123?'rsa':'format');let p=1,salt=null;if(f&2){salt=d.slice(1,17);p=17}const iv=d.slice(p,p+12);const k=await crypto.subtle.importKey('raw',await keyFor(salt),'AES-GCM',false,['decrypt']);try{return new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv},k,d.slice(p+12)))}catch{fail('wrong')}}
+async function open(d,keyFor){return{text:td.decode(await openB(d,keyFor))}}
 const legacy=async p=>{let s;try{s=st.get('alien_salt_'+btoa(p).substring(0,16))}catch{}if(!s)fail('legacy',$('key'));return kdf(p,unhex(s))};
 /* RSA */
 const OA={name:'RSA-OAEP',hash:'SHA-256'};let pub=null,priv=null;
@@ -142,11 +195,11 @@ function dl(n,t){const a=document.createElement('a');a.href=URL.createObjectURL(
 function pick(accept,fn){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=async()=>{const f=i.files[0];if(!f)return;if(f.size>2e6)return toast('File too large (2 MB max)',1);fn(await f.text())};i.click()}
 async function run(msg,fn){if(busy)return;busy=true;document.body.classList.add('busy');status(msg);await new Promise(r=>setTimeout(r,30));
  try{await fn()}catch(e){if(e instanceof E){status(e.message,'err');toast(e.message,1);e.clear&&show('','text');e.el&&e.el.focus()}else{console.error(e);status('Something went wrong: '+e.message,'err')}}finally{busy=false;document.body.classList.remove('busy')}}
-function setMode(m){mode=m;st.set('alien_mode',m);for(const x of['aes','rsa']){const s=m==x;$('t-'+x).setAttribute('aria-selected',s);$('t-'+x).tabIndex=s?0:-1;$('p-'+x).hidden=!s}}
+function setMode(m){mode=m;st.set('alien_mode',m);for(const x of['aes','rsa','kx']){const s=m==x;$('t-'+x).setAttribute('aria-selected',s);$('t-'+x).tabIndex=s?0:-1;$('p-'+x).hidden=!s}$('mg').hidden=$('fz').hidden=m=='kx'}
 function hint(){const k=$('key').value.trim(),h=$('kh');h.className='hint';
  h.textContent=!k?'Use a passphrase, or make a random 256-bit key with Random key.':isHex(k)?'256-bit key, used as is.':k.length<10?'Short passphrase. A longer one is safer.':'Passphrase, stretched with PBKDF2 (600,000 rounds). Encrypting takes a moment.';
  if(k&&!isHex(k)&&k.length<10)h.classList.add('w2')}
-function master(){const h=!!st.get('alien_master_key');$('ms').textContent=h?'Master key saved in this browser, unencrypted.':'No master key saved.';$('mu').hidden=$('md').hidden=!h}
+function master(){const v=!!st.get('alien_vault'),l=!!st.get('alien_master_key');$('ms').textContent=v?'Master key saved here, locked with your vault password.':l?'An old master key is saved unlocked. Lock it with a password.':'No master key saved.';$('mu').hidden=!v;$('ml').hidden=!l;$('md').hidden=!(v||l)}
 async function fp(){const e=$('fp');if(!pub){e.textContent='';return}const h=hex(new Uint8Array(await crypto.subtle.digest('SHA-256',await crypto.subtle.exportKey('spki',pub))));e.textContent='Fingerprint: '+h.slice(0,32).match(/.{4}/g).join(' ')}
 function pills(){fp();for(const[p,k,t]of[['pp',pub,'Ready to encrypt'],['vp',priv,'Ready to decrypt']]){const e=$(p);if(e.dataset.bad){e.className='pill bad';e.textContent='Invalid'}else{e.className='pill'+(k?' on':'');e.textContent=k?t:'Not set'}}}
 async function keyText(w){const el=$(w),bad=w=='pub'?'pp':'vp';try{await(w=='pub'?loadPub:loadPriv)(el.value);delete $(bad).dataset.bad}catch(e){w=='pub'?pub=null:priv=null;$(bad).dataset.bad=1;status(e.message||'Invalid key','err')}pills()}
@@ -160,14 +213,132 @@ async function decrypt(){const t=$('inp').value;if(!t.trim())throw new E('Paste 
  else{if(!priv)throw new E('Add your private key first.',$('priv'));const d=unpack(t);let j,key;try{j=JSON.parse(td.decode(d));if(!j.k||!j.d)throw 0}catch{fail(d[0]<=3?'aes':'format')}
   try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,unb64(j.k)))}catch{fail('wrongR')}r=await open(unb64(j.d),async()=>key)}
  show(r.text,'text');status('Decrypted.','ok')}
+/* ---------- Key exchange: no server, codes travel through any other app ---------- */
+const EC={name:'ECDH',namedCurve:'P-256'},NONE=new Uint8Array(0);let kxS=null,kxSecret=null,pqL=null;
+async function loadPQ(){if(pqL)return pqL;for(const u of['./ml-kem.js','https://esm.sh/@noble/post-quantum@0.2.1/ml-kem','https://cdn.jsdelivr.net/npm/@noble/post-quantum@0.2.1/ml-kem.js/+esm']){try{const m=await import(u);if(m.ml_kem768)return pqL=m.ml_kem768}catch{}}
+ throw new E('Could not load the post-quantum library. Check your internet, or use Classic.')}
+const kxKdf=async(parts,info)=>new Uint8Array(await crypto.subtle.deriveBits({name:'HKDF',hash:'SHA-256',salt:new Uint8Array(32),info},await crypto.subtle.importKey('raw',cat(...parts),'HKDF',false,['deriveBits']),256));
+async function kxDone(parts,tr){kxSecret=await kxKdf(parts,cat(te.encode('alien-key'),tr));const c=(await kxKdf(parts,cat(te.encode('alien-chk'),tr))).slice(0,6);
+ $('kc').textContent='Check code: '+hex(c).match(/.{4}/g).join(' ').toUpperCase()+(parts[1].length?'  ·  hybrid, post-quantum':'  ·  classic');$('kres').hidden=false;kxS=null}
+const ecdh=async(priv,raw)=>new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH',public:await crypto.subtle.importKey('raw',raw,EC,false,[])},priv,256));
+async function xStart(){const h=$('kp').value=='h',kp=await crypto.subtle.generateKey(EC,false,['deriveBits']);let kem=null,mp=NONE;
+ if(h){kem=(await loadPQ()).keygen();mp=kem.publicKey}
+ const o=cat(Uint8Array.of(h?0xA2:0xA1),new Uint8Array(await crypto.subtle.exportKey('raw',kp.publicKey)),mp);kxS={kp,kem,o};$('kres').hidden=true;$('ko').value=pack(o,$('al').checked);status('Offer ready. Send it, then paste the reply.','ok')}
+async function xRespond(){kxFollow('kt');const o=unpack($('kt').value),h=o[0]==0xA2;if(!(o[0]==0xA1||h)||o.length!=(h?1250:66))fail('format',$('kt'));
+ const kp=await crypto.subtle.generateKey(EC,false,['deriveBits']),my=new Uint8Array(await crypto.subtle.exportKey('raw',kp.publicKey));let ss=NONE,ct=NONE;
+ const ec=await ecdh(kp.privateKey,o.slice(1,66));if(h){const x=(await loadPQ()).encapsulate(o.slice(66));ct=x.cipherText;ss=x.sharedSecret}
+ const rp=cat(Uint8Array.of(h?0xB2:0xB1),my,ct);await kxDone([ec,ss],cat(o,rp));$('kb').value=pack(rp,$('al').checked);status('Reply ready. Send it back.','ok')}
+async function xFinish(){kxFollow('kr');if(!kxS)throw new E('Make an offer first.');const r=unpack($('kr').value),h=r[0]==0xB2;if(!(r[0]==0xB1||h)||h!=(kxS.o[0]==0xA2)||r.length!=(h?1154:66))fail('format',$('kr'));
+ const ec=await ecdh(kxS.kp.privateKey,r.slice(1,66));let ss=NONE;if(h)try{ss=(await loadPQ()).decapsulate(r.slice(66),kxS.kem.secretKey)}catch(e){if(e instanceof E)throw e;fail('format',$('kr'))}
+ await kxDone([ec,ss],cat(kxS.o,r));status('Shared secret ready.','ok')}
+/* ---------- Files ---------- */
+const Q=[],MAGIC=te.encode('ALF1'),fsz=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
+const ico=n=>{const e=(n.split('.').pop()||'').toLowerCase();return/^(png|jpe?g|gif|webp|svg|bmp|heic|avif|ico|tiff?)$/.test(e)?'🖼️':/^(mp4|mov|mkv|avi|webm|m4v)$/.test(e)?'🎞️':/^(mp3|wav|flac|ogg|m4a|aac)$/.test(e)?'🎵':/^(zip|rar|7z|tar|gz|bz2|xz)$/.test(e)?'🗜️':/^(pdf|docx?|xlsx?|pptx?|txt|md|rtf|odt|csv)$/.test(e)?'📄':/^(enc|alien)$/.test(e)?'🔒':'📁'};
+const same=(a,b)=>a.length==b.length&&a.every((v,i)=>v==b[i]),safeName=n=>(n.split(/[\\/]/).pop().replace(/[:*?"<>|\x00-\x1f]/g,'_')||'file');
+function dlb(n,b){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),6e4)}
+function pickFiles(){const i=document.createElement('input');i.type='file';i.multiple=true;i.onchange=()=>fAdd(i.files);i.click()}
+function fAdd(fs){for(const f of fs)Q.push({f});fDraw();$('fz').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+function fDraw(){const l=$('fl');l.textContent='';for(const q of Q){const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('div'),n=document.createElement('b'),m=document.createElement('small'),nm=q.res?q.res.name:q.base||q.f.name;d.className='fi';a.className='fx';b.className='fn';
+ a.textContent=q.dir&&!q.res?'📂':ico(nm);n.textContent=nm;m.textContent=fsz(q.f.size)+(q.dir?' · '+q.dir.length+' files':'')+' · '+(q.msg||(/\.(enc|alien)$/.test(nm)?'Ready to decrypt':'Ready → '+nm+($('al').checked?'.enc.alien':'.enc')));if(q.err)m.className='er';b.append(n,m);d.append(a,b);
+ if(q.res){const s=document.createElement('button');s.className='btn s';s.textContent='Save';s.onclick=()=>dlb(q.res.name,q.res.blob);d.append(s)}
+ const x=document.createElement('button');x.className='btn t';x.textContent='✕';x.title='Remove';x.onclick=()=>{Q.splice(Q.indexOf(q),1);fDraw()};d.append(x);l.append(d)}smart()}
+/* folders: read, then pack into one store-only ZIP before encrypting */
+const CT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc=b=>{let c=-1;for(let i=0;i<b.length;i++)c=CT[(c^b[i])&255]^(c>>>8);return(c^-1)>>>0};
+const catA=a=>{const o=new Uint8Array(a.reduce((n,x)=>n+x.length,0));let p=0;for(const x of a){o.set(x,p);p+=x.length}return o};
+async function zipStore(fl){const parts=[],cen=[];let off=0;
+ for(const{path,file}of fl){const nm=te.encode(path),d=new Uint8Array(await file.arrayBuffer()),c=crc(d),dt=new Date(file.lastModified||Date.now()),tm=dt.getHours()<<11|dt.getMinutes()<<5|dt.getSeconds()>>1,da=Math.max(0,dt.getFullYear()-1980)<<9|(dt.getMonth()+1)<<5|dt.getDate();
+  const h=new DataView(new ArrayBuffer(30));h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x800,true);h.setUint16(10,tm,true);h.setUint16(12,da,true);h.setUint32(14,c,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,nm.length,true);
+  const e=new DataView(new ArrayBuffer(46));e.setUint32(0,0x02014b50,true);e.setUint16(4,20,true);e.setUint16(6,20,true);e.setUint16(8,0x800,true);e.setUint16(12,tm,true);e.setUint16(14,da,true);e.setUint32(16,c,true);e.setUint32(20,d.length,true);e.setUint32(24,d.length,true);e.setUint16(28,nm.length,true);e.setUint32(42,off,true);
+  parts.push(new Uint8Array(h.buffer),nm,d);cen.push(new Uint8Array(e.buffer),nm);off+=30+nm.length+d.length}
+ const cs=catA(cen),z=new DataView(new ArrayBuffer(22));z.setUint32(0,0x06054b50,true);z.setUint16(8,fl.length,true);z.setUint16(10,fl.length,true);z.setUint32(12,cs.length,true);z.setUint32(16,off,true);
+ return catA([...parts,cs,new Uint8Array(z.buffer)])}
+const mkDir=(name,fl)=>({name:name+'.zip',size:fl.reduce((n,x)=>n+x.file.size,0),async arrayBuffer(){return(await zipStore(fl)).buffer}});
+function fAddDir(name,fl){if(!fl.length)return toast('That folder is empty',1);Q.push({f:mkDir(name,fl),base:name,dir:fl});fDraw();$('fz').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+async function walk(d,p,out){const r=d.createReader();for(;;){const b=await new Promise((ok,no)=>r.readEntries(ok,no));if(!b.length)break;for(const c of b){if(c.isFile)out.push({path:p+'/'+c.name,file:await new Promise((ok,no)=>c.file(ok,no))});else await walk(c,p+'/'+c.name,out)}}}
+async function fDrop(dt){const en=[...(dt.items||[])].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean);if(!en.length)return fAdd(dt.files);
+ const loose=[];for(const e of en){if(e.isFile)loose.push(await new Promise((ok,no)=>e.file(ok,no)));else{const fl=[];await walk(e,e.name,fl);fAddDir(e.name,fl)}}if(loose.length)fAdd(loose)}
+function pickFolder(){const i=document.createElement('input');i.type='file';i.webkitdirectory=true;i.onchange=()=>{const m=new Map();for(const f of i.files){const p=f.webkitRelativePath||f.name,r=p.split('/')[0];if(!m.has(r))m.set(r,[]);m.get(r).push({path:p,file:f})}for(const[r,l]of m)fAddDir(r,l)};i.click()}
+function syncAl(){$('ka').checked=$('al').checked;for(const b of document.querySelectorAll('#fmt button')){const v=(b.dataset.v=='1')==$('al').checked;b.setAttribute('aria-selected',v);b.tabIndex=v?0:-1}fDraw()}
+async function fEncOne(q,alien){if(q.f.size>5e8)throw new E('File over 500 MB.');if(alien&&q.f.size>3e7)throw new E('Too big for alien script (30 MB). Turn it off.');
+ const nm=te.encode(q.f.name),body=cat(Uint8Array.of(nm.length>>8,nm.length&255),nm,new Uint8Array(await q.f.arrayBuffer()));let head,raw;
+ if(mode=='aes'){const k=secret();if(isHex(k))raw=await sealB(body,unhex(k));else{const s=rand(16);raw=await sealB(body,await kdf(k,s),s)}head=Uint8Array.of(0)}
+ else{const k=rand(32),w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,k));raw=await sealB(body,k);head=cat(Uint8Array.of(1,w.length>>8,w.length&255),w)}
+ const bin=cat(MAGIC,head,raw);q.res=alien?{name:(q.base||q.f.name)+'.enc.alien',blob:new Blob([gEnc(bin)],{type:'text/plain'})}:{name:(q.base||q.f.name)+'.enc',blob:new Blob([bin],{type:'application/octet-stream'})}}
+async function fDecOne(q){if(q.dir)fail('format');if(same(new Uint8Array(await q.f.slice(0,4).arrayBuffer()),M2))return fDec2(q,q.f);let b=new Uint8Array(await q.f.arrayBuffer());if(!same(b.subarray(0,4),MAGIC)){let t='';try{t=td.decode(b)}catch{}if(isG(t))b=gDec(t)}if(same(b.subarray(0,4),M2))return fDec2(q,new Blob([b]));if(!same(b.subarray(0,4),MAGIC))fail('format');
+ const m=b[4];if(m==1&&mode=='aes')fail('rsa');if(m==0&&mode=='rsa')fail('aes');if(m>1)fail('format');let key,p=5;
+ if(m==1){const l=b[5]<<8|b[6];try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,b.slice(7,7+l)))}catch{fail('wrongR')}p=7+l}
+ const pt=await openB(b.slice(p),async s=>{if(m==1)return key;const k=secret();return s?kdf(k,s):isHex(k)?unhex(k):legacy(k)}),nl=pt[0]<<8|pt[1];
+ q.res={name:safeName(td.decode(pt.subarray(2,2+nl))),blob:new Blob([pt.subarray(2+nl)])}}
+async function fRun(dec){if(!Q.length)throw new E('Add some files first.');if(mode=='aes')secret();else if(dec?!priv:!pub)throw new E(dec?'Add your private key first.':'Add a public key first, or generate a key pair.');
+ const al=$('al').checked;let ok=0;for(const q of Q){q.res=null;q.err=0;q.msg=dec?'Decrypting…':'Encrypting…';fDraw();await new Promise(r=>setTimeout(r,20));
+  try{await(dec?fDecOne(q):fEncOne2(q,al));q.msg=dec?'Decrypted':'Encrypted · '+fsz(q.res.blob.size);ok++;if($('fas').checked)dlb(q.res.name,q.res.blob)}catch(e){q.err=1;q.msg=e instanceof E?e.message:'Failed: '+e.message}fDraw()}
+ status(ok+' of '+Q.length+' file(s) '+(dec?'decrypted':'encrypted')+'.',ok?'ok':'err')}
+/* ---------- Big files (chunked), compression, smart decrypt, QR, vault ---------- */
+const M2=te.encode('ALF2');
+async function* chunks(rs,n){const r=rs.getReader();let buf=[],len=0;for(;;){const{done,value}=await r.read();if(value){buf.push(value);len+=value.length}while(len>=n||(done&&len)){const all=catA(buf),t=Math.min(n,all.length);yield all.slice(0,t);const rest=all.slice(t);buf=rest.length?[rest]:[];len=rest.length}if(done)return}}
+async function fEncOne2(q,alien){const dir=!!q.dir;if(dir&&q.f.size>5e8)throw new E('Folder over 500 MB.');if(q.f.size>4e9)throw new E('File over 4 GB.');if(alien&&q.f.size>3e7)throw new E('Too big for alien script (30 MB). Turn it off.');
+ const zip=$('fcz').checked,m=mode=='rsa'?1:isHex(secret())?0:2;let key,head;
+ if(m==1){key=rand(32);const w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,key));head=cat(Uint8Array.of(1,w.length>>8,w.length&255),w)}
+ else if(m==0){key=unhex(secret());head=Uint8Array.of(0)}
+ else{const sa=rand(16);key=await kdf(secret(),sa);head=cat(Uint8Array.of(2),sa)}
+ const ck=await crypto.subtle.importKey('raw',key,'AES-GCM',false,['encrypt']),parts=[cat(M2,head,Uint8Array.of(zip?1:0))];let i=0;
+ const put=async(d,last)=>{const iv=rand(12),aad=Uint8Array.of(i>>>24,i>>>16,i>>>8,i,last?1:0),c=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:aad},ck,d)),n=12+c.length;parts.push(Uint8Array.of(n>>>24,n>>>16,n>>>8,n),iv,c);i++};
+ const nm=te.encode(q.f.name);await put(cat(Uint8Array.of(nm.length>>8,nm.length&255),nm),false);
+ let rs=(dir?new Blob([await q.f.arrayBuffer()]):q.f).stream();if(zip)rs=rs.pipeThrough(new CompressionStream('deflate-raw'));
+ let prev=null;for await(const c of chunks(rs,1<<24)){if(prev)await put(prev,false);prev=c}await put(prev||new Uint8Array(0),true);
+ const blob=new Blob(parts,{type:'application/octet-stream'}),base=q.base||q.f.name;
+ q.res=alien?{name:base+'.enc.alien',blob:new Blob([gEnc(new Uint8Array(await blob.arrayBuffer()))],{type:'text/plain'})}:{name:base+'.enc',blob}}
+async function fDec2(q,bl){const h=new Uint8Array(await bl.slice(0,300).arrayBuffer()),m=h[4];let p=5,key;
+ if(m==1&&mode=='aes')fail('rsa');if(m!=1&&mode=='rsa')fail('aes');if(m>2)fail('format');
+ if(m==1){const l=h[5]<<8|h[6];try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,h.slice(7,7+l)))}catch{fail('wrongR')}p=7+l}
+ else if(m==2){key=await kdf(secret(),h.slice(5,21));p=21}else{const k=secret();if(!isHex(k))fail('wrong');key=unhex(k)}
+ const zip=h[p],ck=await crypto.subtle.importKey('raw',key,'AES-GCM',false,['decrypt']),out=[];let o=p+1,i=0,name='file';
+ while(o<bl.size){const n=new DataView(await bl.slice(o,o+4).arrayBuffer()).getUint32(0),d=new Uint8Array(await bl.slice(o+4,o+4+n).arrayBuffer());o+=4+n;let pt;
+  try{pt=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:d.slice(0,12),additionalData:Uint8Array.of(i>>>24,i>>>16,i>>>8,i,o>=bl.size?1:0)},ck,d.slice(12)))}catch{fail('wrong')}
+  if(i==0)name=td.decode(pt.subarray(2,2+(pt[0]<<8|pt[1])));else out.push(pt);i++}
+ if(i<2)fail('format');let r=new Blob(out);if(zip)r=await new Response(r.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
+ q.res={name:safeName(name),blob:r}}
+function smart(){const dec=Q.some(q=>/\.(enc|alien)$/.test(q.f.name));document.querySelector('[data-a=fDec]').classList.toggle('p',dec);document.querySelector('[data-a=fEnc]').classList.toggle('p',!dec)}
+for(const[i,k]of[['fcz','alien_cz'],['fas','alien_as']]){$(i).checked=st.get(k)==='1';$(i).addEventListener('change',()=>st.set(k,$(i).checked?'1':'0'))}
+/* Key exchange: alien glyph switch lives in the exchange tab and stays in sync */
+function kxRepack(){for(const id of['ko','kb']){const v=$(id).value.trim();if(v)try{$(id).value=pack(unpack(v),$('al').checked)}catch{}}}
+$('ka').onchange=()=>{$('al').checked=$('ka').checked;$('al').dispatchEvent(new Event('change'))};
+/* Master key vault: encrypted with a password you choose (PBKDF2 600k + AES-256-GCM), stored only in this browser */
+function askPw(title,conf){return new Promise(ok=>{const d=$('vd');$('vt').textContent=title;$('vpw2').hidden=!conf;$('vpw').value=$('vpw2').value='';$('ve').textContent='';
+ const done=v=>{d.close();ok(v)};$('vgo').onclick=()=>{const p=$('vpw').value;if(!p){$('ve').textContent='Enter the password.';return}if(conf&&p.length<8){$('ve').textContent='Use at least 8 characters.';return}if(conf&&p!==$('vpw2').value){$('ve').textContent='The two passwords differ.';return}done(p)};
+ $('vno').onclick=()=>done(null);d.oncancel=()=>ok(null);d.showModal();$('vpw').focus()})}
+for(const i of['vpw','vpw2'])$(i).addEventListener('keydown',e=>{if(e.key=='Enter')$('vgo').click()});
+async function lockMaster(k){const pw=await askPw('Choose a vault password',true);if(!pw)return;await run('Locking master key…',async()=>{const s=rand(16);st.set('alien_vault',b64(await sealB(te.encode(k),await kdf(pw,s),s)));st.del('alien_master_key');master();toast('Master key locked and saved')})}
+async function unlockMaster(){const pw=await askPw('Unlock master key',false);if(!pw)return;await run('Unlocking…',async()=>{let r;try{r=await open(unb64(st.get('alien_vault')),s=>kdf(pw,s))}catch{throw new E('Wrong vault password.')}$('key').value=r.text;hint();toast('Master key loaded')})}
+/* QR: shows the code as Base64 in a QR; scans with camera or image. Libraries load from a local file first, then the CDN */
+const loadJS=urls=>new Promise((ok,no)=>{const t=u=>{if(!u)return no();const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=()=>{s.remove();t(urls.shift())};document.head.append(s)};t(urls.shift())});
+let cam=null,scanT='';
+const stopCam=()=>{if(cam){cam.getTracks().forEach(t=>t.stop());cam=null}};$('qd').addEventListener('close',stopCam);
+async function qrShow(id){try{if(!$(id).value.trim())throw new E('Nothing to show yet.');const raw=unpack($(id).value);
+ if(!window.qrcode)await loadJS(['qrcode.js','https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js']).catch(()=>{throw new E('QR library not found. Save qrcode.js next to this page, or go online.')});
+ const q=qrcode(0,'L');q.addData(b64(raw));q.make();$('qi').src=q.createDataURL(5,8);$('qv').hidden=false;$('qc').hidden=true;$('qd').showModal()}catch(e){toast(e.message||'QR failed',1)}}
+async function decQR(src){if('BarcodeDetector' in window){try{const r=await new BarcodeDetector({formats:['qr_code']}).detect(src);if(r[0])return r[0].rawValue}catch{}}
+ if(!window.jsQR)await loadJS(['jsQR.js','https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js']).catch(()=>{});if(!window.jsQR)return null;
+ const w=src.videoWidth||src.width,h=src.videoHeight||src.height,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h);return r&&r.data}
+function gotQR(t){stopCam();$('qd').close();$(scanT).value=t;$(scanT).dispatchEvent(new Event('input'));toast('QR read')}
+async function qrScan(id){scanT=id;$('qv').hidden=true;$('qc').hidden=false;$('qm').textContent='Point the camera at the QR code.';$('qd').showModal();
+ try{cam=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('qvid');v.srcObject=cam;await v.play();const tick=async()=>{if(!cam)return;if(v.readyState>=2){const t=await decQR(v);if(t)return gotQR(t)}setTimeout(tick,250)};tick()}
+ catch{$('qm').textContent='Camera not available. Choose an image instead.'}}
+function qrImg(){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=async()=>{const f=i.files[0];if(!f)return;const t=await decQR(await createImageBitmap(f));t?gotQR(t):$('qm').textContent='No QR code found in that image.'};i.click()}
+function confirmBox(t,m,ok){return new Promise(r=>{const d=$('cd');$('ct').textContent=t;$('cb').textContent=m;$('cy').textContent=ok||'Confirm';const done=v=>{d.close();r(v)};$('cy').onclick=()=>done(true);$('cn').onclick=()=>done(false);d.oncancel=()=>r(false);d.showModal();$('cn').focus()})}
+/* Key exchange follows the format of the code you receive (glyphs or Base64) */
+const fmtOf=t=>{t=t.trim();return t.length<20?null:isG(t)?true:/^[A-Za-z0-9+/=\s]+$/.test(t)?false:null};
+function kxFollow(id){const f=fmtOf($(id).value);if(f!==null&&f!==$('al').checked){$('al').checked=f;$('al').dispatchEvent(new Event('change'));toast(f?'Switched to alien glyphs to match':'Switched to Base64 to match')}}
+$('kt').addEventListener('input',()=>kxFollow('kt'));$('kr').addEventListener('input',()=>kxFollow('kr'));
 const A={
  theme(){const d=document.documentElement,n=d.dataset.theme=='dark'?'light':'dark';d.dataset.theme=n;st.set('alien_theme',n);$('thm').textContent=n=='dark'?'Light':'Dark'},
  eye(b){const k=$('key'),s=k.type=='password';k.type=s?'text':'password';b.textContent=s?'Hide':'Show'},
  pasteKey(){paste($('key'))},copyKey(){copy($('key').value)},
  gen(){$('key').value=hex(rand(32));$('key').type='text';document.querySelector('[data-a=eye]').textContent='Hide';hint();toast('Random key made. Store it safely; messages need it.')},
- mSave(){const k=$('key').value.trim();if(!k)return toast('Enter a key first',1);st.set('alien_master_key',k);master();toast('Master key saved')},
- mUse(){$('key').value=st.get('alien_master_key')||'';hint();toast('Master key loaded')},
- mDel(){st.del('alien_master_key');master();toast('Master key removed')},
+ mSave(){const k=$('key').value.trim();if(!k)return toast('Enter a key first',1);lockMaster(k)},mLock(){lockMaster(st.get('alien_master_key'))},
+ mUse(){unlockMaster()},
+ mDel(){confirmBox('Forget master key?','The saved master key will be deleted from this browser. This cannot be undone.','Forget').then(y=>{if(y){st.del('alien_vault');st.del('alien_master_key');master();toast('Master key removed')}})},
  genRsa(){run('Generating RSA-2048 keys…',async()=>{const k=await crypto.subtle.generateKey({...OA,modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']);pub=k.publicKey;priv=k.privateKey;
   $('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY');$('priv').value=pem(await crypto.subtle.exportKey('pkcs8',priv),'PRIVATE KEY');delete $('pp').dataset.bad;delete $('vp').dataset.bad;pills();status('Key pair ready.','ok')})},
  pem(){pick('.pem,.key,.txt,text/plain',async t=>{const b=unpem(t,'PRIVATE KEY')?'priv':null,c=unpem(t,'PUBLIC KEY')?'pub':null;if(!b&&!c)return toast('No PEM key found in that file',1);
@@ -176,26 +347,35 @@ const A={
  saveKeys(){const a=$('priv').value.trim(),b=$('pub').value.trim();if(!a&&!b)return toast('No keys to save',1);if(a)dl('private_key.pem',a);if(b)setTimeout(()=>dl('public_key.pem',b),300);toast('Saved. Keep private_key.pem secret.')},
  cp(b){copy($(b.dataset.t).value)},pst(b){paste($(b.dataset.t))},
  showPriv(b){const s=$('priv').classList.toggle('show');b.textContent=s?'Hide':'Reveal'},
- open(){pick('.txt,.md,.json,.csv,text/*',t=>{$('inp').value=t;count()})},
+ open(){pickFiles()},wipeAsk(){confirmBox('Wipe everything on this page?','Keys, messages, files and key-exchange codes will be cleared from this page. Your saved master key is not affected.','Wipe').then(y=>y&&A.wipe())},qShow(b){qrShow(b.dataset.t)},qScan(b){qrScan(b.dataset.t)},qImg(){qrImg()},qClose(){$('qd').close()},fold(){pickFolder()},
+ kxStart(){run('Making offer…',xStart)},kxRespond(){run('Making reply…',xRespond)},kxFinish(){run('Finishing…',xFinish)},
+ kxUse(){if(!kxSecret)return;$('key').value=hex(kxSecret);$('key').type='text';document.querySelector('[data-a=eye]').textContent='Hide';hint();setMode('aes');toast('Shared secret set as your key')},
+ kxCopy(){kxSecret?copy(hex(kxSecret)):toast('No secret yet')},
+ fEnc(){run('Encrypting files…',()=>fRun(false))},fDec(){run('Decrypting files…',()=>fRun(true))},
+ fAll(){const r=Q.filter(q=>q.res);if(!r.length)return toast('Nothing to save yet');r.forEach((q,i)=>setTimeout(()=>dlb(q.res.name,q.res.blob),i*400))},fClr(){Q.length=0;fDraw()},
  enc(){run('Encrypting…',encrypt)},dec(){run('Decrypting…',decrypt)},
  swap(){const a=$('inp').value,b=out;$('inp').value=b;show(a,isG(a)||/^[A-Za-z0-9+/=\s]{60,}$/.test(a)?'cipher':'text');status('')},
  clr(){$('inp').value='';show('','text');status('')},
- wipe(){for(const i of['key','pub','priv','inp'])$(i).value='';pub=priv=null;show('','text');status('');hint();pills();toast('Cleared from this page')},
+ wipe(){for(const i of['key','pub','priv','inp'])$(i).value='';pub=priv=kxS=kxSecret=null;for(const i of['ko','kr','kt','kb'])$(i).value='';$('kres').hidden=true;Q.length=0;fDraw();show('','text');status('');hint();pills();toast('Cleared from this page')},
  share(){out?navigator.share({text:out}).catch(()=>{}):toast('Nothing to share')},
  copyOut(){copy(out)},save(){out?dl('alien-message.txt',out):toast('Nothing to save')}};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)A[b.dataset.a](b)});
 document.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
-document.querySelector('.seg').addEventListener('keydown',e=>{if(e.key!='ArrowLeft'&&e.key!='ArrowRight')return;const m=mode=='aes'?'rsa':'aes';setMode(m);$('t-'+m).focus();e.preventDefault()});
+document.querySelector('.seg').addEventListener('keydown',e=>{if(e.key!='ArrowLeft'&&e.key!='ArrowRight')return;const o=['aes','rsa','kx'],m=o[(o.indexOf(mode)+(e.key=='ArrowRight'?1:2))%3];setMode(m);$('t-'+m).focus();e.preventDefault()});
 $('inp').addEventListener('input',count);$('key').addEventListener('input',hint);
 $('inp').addEventListener('keydown',e=>{if(e.key=='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();A[e.shiftKey?'dec':'enc']()}});
 let kt={};for(const w of['pub','priv']){$(w).addEventListener('input',()=>{clearTimeout(kt[w]);kt[w]=setTimeout(()=>keyText(w),350)})}
 const dz=document.querySelector('.pi');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
-dz.addEventListener('drop',async e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(!f)return;if(f.size>2e6)return toast('File too large (2 MB max)',1);$('inp').value=await f.text();count()});
-$('al').checked=st.get('alien_script')!=='0';$('al').addEventListener('change',()=>st.set('alien_script',$('al').checked?'1':'0'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');fDrop(e.dataTransfer)});
+const zn=$('dzn');zn.onclick=pickFiles;zn.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();pickFiles()}};zn.addEventListener('dragover',e=>{e.preventDefault();zn.classList.add('drag')});zn.addEventListener('dragleave',()=>zn.classList.remove('drag'));zn.addEventListener('drop',e=>{e.preventDefault();zn.classList.remove('drag');fDrop(e.dataTransfer)});
+$('al').checked=st.get('alien_script')!=='0';$('al').addEventListener('change',()=>{st.set('alien_script',$('al').checked?'1':'0');syncAl();kxRepack()});for(const b of document.querySelectorAll('#fmt button'))b.onclick=()=>{$('al').checked=b.dataset.v=='1';$('al').dispatchEvent(new Event('change'))};syncAl();
 $('shr').hidden=!navigator.share;$('ik').checked=st.get('alien_idle')==='1';$('ik').addEventListener('change',()=>st.set('alien_idle',$('ik').checked?'1':'0'));
 let idle;['pointerdown','keydown','input'].forEach(v=>addEventListener(v,()=>{clearTimeout(idle);if($('ik').checked)idle=setTimeout(()=>{A.wipe();toast('Cleared after 5 minutes idle')},3e5)},{passive:true}));
 $('thm').textContent=document.documentElement.dataset.theme=='dark'?'Light':'Dark';
 setMode(st.get('alien_mode')=='rsa'?'rsa':'aes');hint();master();pills();count();
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('drop',e=>{e.preventDefault();if(e.target.closest&&e.target.closest('.pi,#dzn'))return;if(mode=='kx')return toast('Switch to Passphrase or Key pair to encrypt files',1);fDrop(e.dataTransfer)});
+addEventListener('beforeunload',e=>{if(kxS)e.preventDefault()});
 if(!crypto.subtle)status('Encryption needs a secure context: open this file over https or localhost.','err');
 </script>
 </body>
