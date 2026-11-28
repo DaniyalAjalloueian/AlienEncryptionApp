@@ -8,7 +8,7 @@
 <title>Alien Encryption</title>
 <script>try{var t=localStorage.getItem('alien_theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){document.documentElement.dataset.theme='dark'}</script>
 <style>
-:root{--bg:#eef1f7;--sf:#fff;--fd:#f6f7fb;--ln:#d3d9e8;--tx:#161a2c;--mu:#566086;--ac:#a85600;--ai:#fff;--sg:#0a6a88;--er:#b3261e;--ok:#1a7a45;--tr:#9aa3c4;--ui:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--ti:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mo:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--gl:"Noto Sans Yi","Noto Sans Vai","Noto Sans Javanese","Noto Sans Cham","Microsoft Yi Baiti","Nirmala UI","Malgun Gothic",system-ui,sans-serif;color-scheme:light}
+:root{--bg:#eef1f7;--sf:#fff;--fd:#f6f7fb;--ln:#d3d9e8;--tx:#161a2c;--mu:#566086;--ac:#a85600;--ai:#fff;--sg:#0a6a88;--er:#b3261e;--ok:#1a7a45;--tr:#9aa3c4;--ui:system-ui,-apple-system,"Segoe UI",Roboto,"Vazirmatn","Noto Sans Arabic",Tahoma,sans-serif;--ti:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mo:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--gl:"Noto Sans Yi","Noto Sans Vai","Noto Sans Javanese","Noto Sans Cham","Microsoft Yi Baiti","Nirmala UI","Malgun Gothic",system-ui,sans-serif;color-scheme:light}
 :root[data-theme=dark]{--bg:#0c1120;--sf:#141a31;--fd:#0e1326;--ln:#28315a;--tx:#e8ebf8;--mu:#97a1c6;--ac:#ffb454;--ai:#1b1200;--sg:#6fdcff;--er:#ff9494;--ok:#7fe3a4;--tr:#3a4470;color-scheme:dark}
 *{box-sizing:border-box;margin:0}
 body{font:16px/1.5 var(--ui);background:var(--bg);color:var(--tx);min-height:100dvh;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(28px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
@@ -67,6 +67,9 @@ input:focus-visible,textarea:focus-visible{outline:0;border-color:var(--ac);box-
 .fi{display:flex;align-items:center;gap:10px;padding:10px 12px;margin-top:8px;background:var(--fd);border:1px solid var(--ln);border-radius:12px}.fx{font-size:22px}.fn{flex:1;min-width:0}.fn b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.fn small{font-size:12px;color:var(--mu)}.fn small.er{color:var(--er)}
 #fz .tl{margin-top:12px}
 dialog{margin:auto;max-width:92vw}dialog::backdrop{background:rgba(0,0,0,.55)}
+html[dir=rtl] .sw input::after{left:auto;right:3px}
+html[dir=rtl] .sw input:checked::after{transform:translateX(-18px)}
+html[dir=rtl] .sw.o{margin-left:0;margin-right:auto}
 html{-webkit-text-size-adjust:100%}
 .top{flex-wrap:wrap}.hint,.fn small,#st,.ft{overflow-wrap:anywhere}.sel{font-size:16px}
 .fi{flex-wrap:wrap}.fn{flex:1 1 140px}dialog{max-height:92dvh;overflow:auto}
@@ -78,79 +81,215 @@ html{-webkit-text-size-adjust:100%}
 </head>
 <body>
 <div class="w">
-<header class="top"><div><h1>🛸 Alien Encryption</h1><p class="tag">Everything is encrypted in your browser. Your data never leaves it.</p></div>
-<div class="tl"><button class="btn s" data-a="wipeAsk" title="Clear keys, message and result from this page">Wipe</button><button class="btn s" data-a="theme" id="thm">Light</button></div></header>
+<header class="top"><div><h1 data-i18n="appTitle">🛸 Alien Encryption</h1><p class="tag" data-i18n="tagline">Everything is encrypted in your browser. Your data never leaves it.</p></div>
+<div class="tl"><button class="btn s" data-a="wipeAsk" data-i18n="wipeBtn" data-i18n-title="wipeTitle" title="Clear keys, message and result from this page">Wipe</button><button class="btn s" data-a="theme" id="thm">Light</button><button class="btn s" data-a="lang" id="lng">فارسی</button></div></header>
 <main class="con">
 <div class="seg" role="tablist" aria-label="Encryption method">
-<button role="tab" id="t-aes" data-m="aes" aria-controls="p-aes">Passphrase <small>AES-256</small></button>
-<button role="tab" id="t-rsa" data-m="rsa" aria-controls="p-rsa">Key pair <small>RSA-2048</small></button>
-<button role="tab" id="t-kx" data-m="kx" aria-controls="p-kx">Key exchange <small>ECDH · PQ</small></button></div>
+<button role="tab" id="t-aes" data-m="aes" aria-controls="p-aes"><span data-i18n="tabPass">Passphrase</span> <small>AES-256</small></button>
+<button role="tab" id="t-rsa" data-m="rsa" aria-controls="p-rsa"><span data-i18n="tabKeyPair">Key pair</span> <small>RSA-2048</small></button>
+<button role="tab" id="t-kx" data-m="kx" aria-controls="p-kx"><span data-i18n="tabKx">Key exchange</span> <small>ECDH · PQ</small></button></div>
 
 <section class="pn" id="p-aes" role="tabpanel" aria-labelledby="t-aes">
-<label class="lb" for="key">Secret key</label>
-<div class="row"><input type="password" id="key" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Passphrase, or 64-character hex key">
-<div class="tl"><button class="btn s" data-a="eye">Show</button><button class="btn s" data-a="pasteKey">Paste</button><button class="btn s" data-a="gen">Random key</button><button class="btn s" data-a="copyKey">Copy</button></div></div>
+<label class="lb" for="key" data-i18n="secretKeyLabel">Secret key</label>
+<div class="row"><input type="password" id="key" dir="auto" autocomplete="off" autocapitalize="off" spellcheck="false" data-i18n-ph="keyPlaceholder" placeholder="Passphrase, or 64-character hex key">
+<div class="tl"><button class="btn s" data-a="eye" data-i18n="show">Show</button><button class="btn s" data-a="pasteKey" data-i18n="paste">Paste</button><button class="btn s" data-a="gen" data-i18n="randomKey">Random key</button><button class="btn s" data-a="copyKey" data-i18n="copy">Copy</button></div></div>
 <p class="hint" id="kh"></p>
-<div class="mst"><span id="ms"></span><button class="btn t" data-a="mSave">Save as master</button><button class="btn t" data-a="mUse" id="mu">Use master</button><button class="btn t" data-a="mLock" id="ml">Lock it</button><button class="btn t" data-a="mDel" id="md">Forget</button></div>
+<div class="mst"><span id="ms"></span><button class="btn t" data-a="mSave" data-i18n="masterSaveBtn">Save as master</button><button class="btn t" data-a="mUse" id="mu" data-i18n="masterUseBtn">Use master</button><button class="btn t" data-a="mLock" id="ml" data-i18n="masterLockBtn">Lock it</button><button class="btn t" data-a="mDel" id="md" data-i18n="masterForgetBtn">Forget</button></div>
 </section>
 
 <section class="pn" id="p-rsa" role="tabpanel" aria-labelledby="t-rsa" hidden>
-<div class="tl"><button class="btn p s" data-a="genRsa">Generate key pair</button><button class="btn s" data-a="pem">Import .pem file</button><button class="btn s" data-a="saveKeys">Save keys</button></div>
+<div class="tl"><button class="btn p s" data-a="genRsa" data-i18n="genRsaBtn">Generate key pair</button><button class="btn s" data-a="pem" data-i18n="importPemBtn">Import .pem file</button><button class="btn s" data-a="saveKeys" data-i18n="saveKeysBtn">Save keys</button></div>
 <div class="kg">
-<div><div class="hd"><label class="lb" for="pub">Public key</label><span class="pill" id="pp">Not set</span></div><textarea id="pub" spellcheck="false" placeholder="Paste a public key to encrypt for someone"></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="cp" data-t="pub">Copy</button><button class="btn s" data-a="pst" data-t="pub">Paste</button></div><p class="hint">Share this. Anyone with it can write messages only you can read. Compare the fingerprint with the owner to confirm the key is genuine.</p><p class="hint" id="fp" style="font-family:var(--mo)"></p></div>
-<div><div class="hd"><label class="lb" for="priv">Private key</label><span class="pill" id="vp">Not set</span></div><textarea id="priv" class="sec" spellcheck="false" placeholder="Needed to decrypt. Keep it secret."></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="showPriv">Reveal</button><button class="btn s" data-a="cp" data-t="priv">Copy</button><button class="btn s" data-a="pst" data-t="priv">Paste</button></div></div>
+<div><div class="hd"><label class="lb" for="pub" data-i18n="publicKeyLabel">Public key</label><span class="pill" id="pp" data-i18n="pillNotSet">Not set</span></div><textarea id="pub" dir="auto" spellcheck="false" data-i18n-ph="pubPlaceholder" placeholder="Paste a public key to encrypt for someone"></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="cp" data-t="pub" data-i18n="copy">Copy</button><button class="btn s" data-a="pst" data-t="pub" data-i18n="paste">Paste</button></div><p class="hint" data-i18n="pubHint">Share this. Anyone with it can write messages only you can read. Compare the fingerprint with the owner to confirm the key is genuine.</p><p class="hint" id="fp" style="font-family:var(--mo)"></p></div>
+<div><div class="hd"><label class="lb" for="priv" data-i18n="privateKeyLabel">Private key</label><span class="pill" id="vp" data-i18n="pillNotSet">Not set</span></div><textarea id="priv" class="sec" dir="auto" spellcheck="false" data-i18n-ph="privPlaceholder" placeholder="Needed to decrypt. Keep it secret."></textarea><div class="tl" style="margin-top:8px"><button class="btn s" data-a="showPriv" data-i18n="reveal">Reveal</button><button class="btn s" data-a="cp" data-t="priv" data-i18n="copy">Copy</button><button class="btn s" data-a="pst" data-t="priv" data-i18n="paste">Paste</button></div></div>
 </div></section>
 
 <section class="pn" id="p-kx" role="tabpanel" aria-labelledby="t-kx" hidden>
-<label class="lb" for="kp">Protocol</label>
-<select id="kp" class="sel"><option value="h">Hybrid: ECDH P-256 + ML-KEM-768 (post-quantum)</option><option value="c">Classic: ECDH P-256</option></select>
-<label class="sw" style="margin-top:12px"><input type="checkbox" id="ka" role="switch"><span><b>Alien glyphs</b>Show codes as glyphs instead of Base64 (QR always uses Base64)</span></label>
-<p class="hint">No server. Swap two codes over any other app (chat, email, call) and both of you end up with the same secret. Hybrid stays safe even if one of the two algorithms is broken, but needs internet once to load the ML-KEM library. Nothing of yours is sent.</p>
+<label class="lb" for="kp" data-i18n="protocolLabel">Protocol</label>
+<select id="kp" class="sel"><option value="h" data-i18n="protoHybrid">Hybrid: ECDH P-256 + ML-KEM-768 (post-quantum)</option><option value="c" data-i18n="protoClassic">Classic: ECDH P-256</option></select>
+<label class="sw" style="margin-top:12px"><input type="checkbox" id="ka" role="switch"><span><b data-i18n="alienGlyphsSwitchTitle">Alien glyphs</b><span data-i18n="alienGlyphsSwitchDesc">Show codes as glyphs instead of Base64 (QR always uses Base64)</span></span></label>
+<p class="hint" data-i18n="kxIntro">No server. Swap two codes over any other app (chat, email, call) and both of you end up with the same secret. Hybrid stays safe even if one of the two algorithms is broken, but needs internet once to load the ML-KEM library. Nothing of yours is sent.</p>
 <div class="kx">
-<div class="card"><h3>1. I start</h3><p class="hint">Make an offer, send it to your friend, then paste their reply.</p><div class="tl"><button class="btn p s" data-a="kxStart">Make offer</button><button class="btn s" data-a="cp" data-t="ko">Copy offer</button><button class="btn s" data-a="qShow" data-t="ko">QR</button></div>
-<textarea id="ko" readonly placeholder="Your offer appears here"></textarea>
-<textarea id="kr" spellcheck="false" placeholder="Paste their reply here"></textarea><div class="tl"><button class="btn s" data-a="pst" data-t="kr">Paste</button><button class="btn s" data-a="qScan" data-t="kr">Scan QR</button><button class="btn p s" data-a="kxFinish">Finish</button></div></div>
-<div class="card"><h3>2. They started</h3><p class="hint">Paste the offer you received, then send the reply back.</p><div class="tl"><button class="btn s" data-a="pst" data-t="kt">Paste offer</button><button class="btn s" data-a="qScan" data-t="kt">Scan QR</button><button class="btn p s" data-a="kxRespond">Make reply</button></div>
-<textarea id="kt" spellcheck="false" placeholder="Paste their offer here"></textarea>
-<textarea id="kb" readonly placeholder="Your reply appears here"></textarea><div class="tl"><button class="btn s" data-a="cp" data-t="kb">Copy reply</button><button class="btn s" data-a="qShow" data-t="kb">QR</button></div></div>
+<div class="card"><h3 data-i18n="card1Title">1. I start</h3><p class="hint" data-i18n="card1Hint">Make an offer, send it to your friend, then paste their reply.</p><div class="tl"><button class="btn p s" data-a="kxStart" data-i18n="makeOffer">Make offer</button><button class="btn s" data-a="cp" data-t="ko" data-i18n="copyOffer">Copy offer</button><button class="btn s" data-a="qShow" data-t="ko" data-i18n="qr">QR</button></div>
+<textarea id="ko" dir="auto" readonly data-i18n-ph="offerPlaceholder" placeholder="Your offer appears here"></textarea>
+<textarea id="kr" dir="auto" spellcheck="false" data-i18n-ph="replyPlaceholderPaste" placeholder="Paste their reply here"></textarea><div class="tl"><button class="btn s" data-a="pst" data-t="kr" data-i18n="paste">Paste</button><button class="btn s" data-a="qScan" data-t="kr" data-i18n="scanQr">Scan QR</button><button class="btn p s" data-a="kxFinish" data-i18n="finish">Finish</button></div></div>
+<div class="card"><h3 data-i18n="card2Title">2. They started</h3><p class="hint" data-i18n="card2Hint">Paste the offer you received, then send the reply back.</p><div class="tl"><button class="btn s" data-a="pst" data-t="kt" data-i18n="pasteOffer">Paste offer</button><button class="btn s" data-a="qScan" data-t="kt" data-i18n="scanQr">Scan QR</button><button class="btn p s" data-a="kxRespond" data-i18n="makeReply">Make reply</button></div>
+<textarea id="kt" dir="auto" spellcheck="false" data-i18n-ph="offerPlaceholderPaste" placeholder="Paste their offer here"></textarea>
+<textarea id="kb" dir="auto" readonly data-i18n-ph="replyPlaceholder" placeholder="Your reply appears here"></textarea><div class="tl"><button class="btn s" data-a="cp" data-t="kb" data-i18n="copyReply">Copy reply</button><button class="btn s" data-a="qShow" data-t="kb" data-i18n="qr">QR</button></div></div>
 </div>
-<div class="card" id="kres" hidden style="margin-top:16px"><h3>✅ Shared secret ready</h3><p class="hint" id="kc"></p><p class="hint">Read the check code aloud to each other. If it differs, someone tampered with the codes: start again.</p><div class="tl"><button class="btn p s" data-a="kxUse">Use as my key</button><button class="btn s" data-a="kxCopy">Copy secret</button></div></div>
+<div class="card" id="kres" hidden style="margin-top:16px"><h3 data-i18n="kresTitle">✅ Shared secret ready</h3><p class="hint" id="kc"></p><p class="hint" data-i18n="kresHint">Read the check code aloud to each other. If it differs, someone tampered with the codes: start again.</p><div class="tl"><button class="btn p s" data-a="kxUse" data-i18n="useAsKey">Use as my key</button><button class="btn s" data-a="kxCopy" data-i18n="copySecret">Copy secret</button></div></div>
 </section>
 
 <div class="mg" id="mg">
-<div class="pi"><div class="hd"><label class="lb" for="inp">Message</label><div class="tl"><button class="btn s" data-a="open">Add files</button><button class="btn s" data-a="pst" data-t="inp">Paste</button></div></div>
-<textarea id="inp" placeholder="Type text to encrypt, or paste an encrypted message to decrypt. Drop any file here to encrypt it as a file."></textarea><div class="ft"><span id="ci">0 characters</span><span>Ctrl+Enter encrypts</span></div></div>
-<div class="pa"><div class="am"><button class="btn p" data-a="enc">Encrypt</button><button class="btn" data-a="dec">Decrypt</button></div>
-<button class="btn" data-a="swap" title="Move the result into the message box">Swap</button><button class="btn" data-a="clr">Clear</button>
-<label class="sw o"><input type="checkbox" id="al" role="switch" checked><span><b>Alien script</b>Glyphs instead of Base64</span></label>
-<label class="sw"><input type="checkbox" id="ca" role="switch"><span><b>Copy after encrypting</b>Puts the result on your clipboard</span></label><label class="sw"><input type="checkbox" id="ik" role="switch"><span><b>Auto-clear when idle</b>Wipes this page after 5 minutes</span></label></div>
-<div class="po"><div class="hd"><label class="lb" for="out">Result</label><div class="tl"><button class="btn s" data-a="copyOut">Copy</button><button class="btn s" data-a="share" id="shr">Share</button><button class="btn s" data-a="save">Save .txt</button></div></div>
-<textarea id="out" readonly placeholder="The result appears here."></textarea><div class="ft"><span id="co"></span><span id="st" role="status" aria-live="polite"></span></div></div>
+<div class="pi"><div class="hd"><label class="lb" for="inp" data-i18n="messageLabel">Message</label><div class="tl"><button class="btn s" data-a="open" data-i18n="addFiles">Add files</button><button class="btn s" data-a="pst" data-t="inp" data-i18n="paste">Paste</button></div></div>
+<textarea id="inp" dir="auto" data-i18n-ph="msgPlaceholder" placeholder="Type text to encrypt, or paste an encrypted message to decrypt. Drop any file here to encrypt it as a file."></textarea><div class="ft"><span id="ci">0 characters</span><span data-i18n="ctrlEnterHint">Ctrl+Enter encrypts</span></div></div>
+<div class="pa"><div class="am"><button class="btn p" data-a="enc" data-i18n="encryptBtn">Encrypt</button><button class="btn" data-a="dec" data-i18n="decryptBtn">Decrypt</button></div>
+<button class="btn" data-a="swap" data-i18n="swapBtn" data-i18n-title="swapTitle" title="Move the result into the message box">Swap</button><button class="btn" data-a="clr" data-i18n="clearBtn">Clear</button>
+<label class="sw o"><input type="checkbox" id="al" role="switch" checked><span><b data-i18n="alienScriptTitle">Alien script</b><span data-i18n="alienScriptDesc">Glyphs instead of Base64</span></span></label>
+<label class="sw"><input type="checkbox" id="ca" role="switch"><span><b data-i18n="copyAfterTitle">Copy after encrypting</b><span data-i18n="copyAfterDesc">Puts the result on your clipboard</span></span></label><label class="sw"><input type="checkbox" id="ik" role="switch"><span><b data-i18n="autoClearTitle">Auto-clear when idle</b><span data-i18n="autoClearDesc">Wipes this page after 5 minutes</span></span></label></div>
+<div class="po"><div class="hd"><label class="lb" for="out" data-i18n="resultLabel">Result</label><div class="tl"><button class="btn s" data-a="copyOut" data-i18n="copy">Copy</button><button class="btn s" data-a="share" id="shr" data-i18n="share">Share</button><button class="btn s" data-a="save" data-i18n="saveTxt">Save .txt</button></div></div>
+<textarea id="out" dir="auto" readonly data-i18n-ph="resultPlaceholder" placeholder="The result appears here."></textarea><div class="ft"><span id="co"></span><span id="st" role="status" aria-live="polite"></span></div></div>
 </div>
-<section class="pn" id="fz"><div class="hd"><span class="lb">Files</span><span class="hint" style="margin:0">Any type. Uses the key or key pair set above.</span></div>
-<div class="hd" style="margin-top:6px"><span class="lb">Output format</span><div class="seg" id="fmt" role="tablist" aria-label="Output format"><button role="tab" data-v="1">👽 Alien glyphs <small>.enc.alien</small></button><button role="tab" data-v="0">📦 Binary <small>.enc</small></button></div></div>
-<div class="dzn" id="dzn" tabindex="0" role="button"><b>Drop files or folders here</b>or tap to choose (photos, videos, PDFs, zips, anything)</div>
-<div class="tl"><button class="btn s" data-a="open">Add files</button><button class="btn s" data-a="fold">Add folder</button></div>
+<section class="pn" id="fz"><div class="hd"><span class="lb" data-i18n="filesLabel">Files</span><span class="hint" style="margin:0" data-i18n="filesHint">Any type. Uses the key or key pair set above.</span></div>
+<div class="hd" style="margin-top:6px"><span class="lb" data-i18n="outputFormatLabel">Output format</span><div class="seg" id="fmt" role="tablist" aria-label="Output format"><button role="tab" data-v="1">👽 <span data-i18n="fmtAlienLabel">Alien glyphs</span> <small>.enc.alien</small></button><button role="tab" data-v="0">📦 <span data-i18n="fmtBinaryLabel">Binary</span> <small>.enc</small></button></div></div>
+<div class="dzn" id="dzn" tabindex="0" role="button"><b data-i18n="dznTitle">Drop files or folders here</b><span data-i18n="dznSub">or tap to choose (photos, videos, PDFs, zips, anything)</span></div>
+<div class="tl"><button class="btn s" data-a="open" data-i18n="addFiles">Add files</button><button class="btn s" data-a="fold" data-i18n="addFolder">Add folder</button></div>
 <div id="fl"></div>
-<div class="tl" style="gap:18px"><label class="sw"><input type="checkbox" id="fcz" role="switch"><span><b>Compress first</b>Smaller files. Best for documents, text, code</span></label><label class="sw"><input type="checkbox" id="fas" role="switch"><span><b>Auto-save</b>Download each file when it's done</span></label></div>
-<div class="tl"><button class="btn p" data-a="fEnc">Encrypt files</button><button class="btn" data-a="fDec">Decrypt files</button><button class="btn" data-a="fAll">Save all</button><button class="btn t" data-a="fClr">Clear list</button></div>
-<p class="hint">A folder becomes one archive: <b>my_folder.enc.alien</b> or <b>my_folder.enc</b>. Decrypting gives you <b>my_folder.zip</b>, which any device can open. Alien glyphs: 30 MB max. Binary: up to 4 GB (folders 500 MB). Original names are restored when you decrypt.</p></section>
+<div class="tl" style="gap:18px"><label class="sw"><input type="checkbox" id="fcz" role="switch"><span><b data-i18n="compressTitle">Compress first</b><span data-i18n="compressDesc">Smaller files. Best for documents, text, code</span></span></label><label class="sw"><input type="checkbox" id="fas" role="switch"><span><b data-i18n="autosaveTitle">Auto-save</b><span data-i18n="autosaveDesc">Download each file when it's done</span></span></label></div>
+<div class="tl"><button class="btn p" data-a="fEnc" data-i18n="encryptFiles">Encrypt files</button><button class="btn" data-a="fDec" data-i18n="decryptFiles">Decrypt files</button><button class="btn" data-a="fAll" data-i18n="saveAll">Save all</button><button class="btn t" data-a="fClr" data-i18n="clearList">Clear list</button></div>
+<p class="hint" data-i18n="fzHint">A folder becomes one archive: <b>my_folder.enc.alien</b> or <b>my_folder.enc</b>. Decrypting gives you <b>my_folder.zip</b>, which any device can open. Alien glyphs: 30 MB max. Binary: up to 4 GB (folders 500 MB). Original names are restored when you decrypt.</p></section>
 </main></div>
 <dialog id="qd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;max-width:92vw">
-<div id="qv" hidden style="text-align:center"><img id="qi" alt="QR code" style="image-rendering:pixelated;background:#fff;width:min(420px,80vw)"><p class="hint">Your friend opens Scan QR and points the camera here, or you send them a screenshot.</p></div>
-<div id="qc" hidden><video id="qvid" playsinline muted style="width:min(420px,80vw);border-radius:12px"></video><p class="hint" id="qm">Point the camera at the QR code.</p><div class="tl"><button class="btn s" data-a="qImg">Choose image</button></div></div>
-<div class="tl" style="margin-top:10px"><button class="btn p s" data-a="qClose">Close</button></div></dialog>
+<div id="qv" hidden style="text-align:center"><img id="qi" alt="QR code" style="image-rendering:pixelated;background:#fff;width:min(420px,80vw)"><p class="hint" data-i18n="qrFriendHint">Your friend opens Scan QR and points the camera here, or you send them a screenshot.</p></div>
+<div id="qc" hidden><video id="qvid" playsinline muted style="width:min(420px,80vw);border-radius:12px"></video><p class="hint" id="qm" data-i18n="qrPoint">Point the camera at the QR code.</p><div class="tl"><button class="btn s" data-a="qImg" data-i18n="chooseImage">Choose image</button></div></div>
+<div class="tl" style="margin-top:10px"><button class="btn p s" data-a="qClose" data-i18n="closeBtn">Close</button></div></dialog>
 <dialog id="vd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;width:min(380px,92vw)">
-<b id="vt">Vault password</b><p class="hint">This password locks your master key inside this browser. If you forget it, the saved key cannot be recovered.</p>
-<input type="password" id="vpw" autocomplete="off" placeholder="Vault password" style="margin-top:8px"><input type="password" id="vpw2" autocomplete="off" placeholder="Repeat password" style="margin-top:8px" hidden>
-<p class="hint w2" id="ve"></p><div class="tl" style="margin-top:10px"><button class="btn p s" id="vgo">Continue</button><button class="btn s" id="vno">Cancel</button></div></dialog>
+<b id="vt">Vault password</b><p class="hint" data-i18n="vaultHint">This password locks your master key inside this browser. If you forget it, the saved key cannot be recovered.</p>
+<input type="password" id="vpw" autocomplete="off" data-i18n-ph="vaultPh" placeholder="Vault password" style="margin-top:8px"><input type="password" id="vpw2" autocomplete="off" data-i18n-ph="vaultPh2" placeholder="Repeat password" style="margin-top:8px" hidden>
+<p class="hint w2" id="ve"></p><div class="tl" style="margin-top:10px"><button class="btn p s" id="vgo" data-i18n="continueBtn">Continue</button><button class="btn s" id="vno" data-i18n="cancelBtn">Cancel</button></div></dialog>
 <dialog id="cd" style="border:1px solid var(--ln);border-radius:16px;background:var(--sf);color:var(--tx);padding:18px;width:min(380px,92vw)">
-<b id="ct"></b><p class="hint" id="cb"></p><div class="tl" style="margin-top:12px"><button class="btn p s" id="cy">Confirm</button><button class="btn s" id="cn">Cancel</button></div></dialog>
+<b id="ct"></b><p class="hint" id="cb"></p><div class="tl" style="margin-top:12px"><button class="btn p s" id="cy">Confirm</button><button class="btn s" id="cn" data-i18n="cancelBtn">Cancel</button></div></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 'use strict';
+
 const $=id=>document.getElementById(id),te=new TextEncoder(),td=new TextDecoder(),RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const st={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
+/* ---------- i18n: English / Persian ---------- */
+const LANGS={en:{
+appTitle:'🛸 Alien Encryption',tagline:'Everything is encrypted in your browser. Your data never leaves it.',
+wipeBtn:'Wipe',wipeTitle:'Clear keys, message and result from this page',themeLight:'Light',themeDark:'Dark',langBtn:'English',
+tabPass:'Passphrase',tabKeyPair:'Key pair',tabKx:'Key exchange',
+secretKeyLabel:'Secret key',keyPlaceholder:'Passphrase, or 64-character hex key',show:'Show',hide:'Hide',paste:'Paste',randomKey:'Random key',copy:'Copy',
+hintEmpty:'Use a passphrase, or make a random 256-bit key with Random key.',hintHex:'256-bit key, used as is.',hintShort:'Short passphrase. A longer one is safer.',hintStretched:'Passphrase, stretched with PBKDF2 (600,000 rounds). Encrypting takes a moment.',
+masterSaveBtn:'Save as master',masterUseBtn:'Use master',masterLockBtn:'Lock it',masterForgetBtn:'Forget',
+masterNone:'No master key saved.',masterLocked:'Master key saved here, locked with your vault password.',masterUnlocked:'An old master key is saved unlocked. Lock it with a password.',
+genRsaBtn:'Generate key pair',importPemBtn:'Import .pem file',saveKeysBtn:'Save keys',
+publicKeyLabel:'Public key',privateKeyLabel:'Private key',pillNotSet:'Not set',pillInvalid:'Invalid',pillReadyEnc:'Ready to encrypt',pillReadyDec:'Ready to decrypt',
+pubPlaceholder:'Paste a public key to encrypt for someone',privPlaceholder:'Needed to decrypt. Keep it secret.',
+pubHint:'Share this. Anyone with it can write messages only you can read. Compare the fingerprint with the owner to confirm the key is genuine.',
+reveal:'Reveal',fingerprintPrefix:'Fingerprint: ',
+protocolLabel:'Protocol',protoHybrid:'Hybrid: ECDH P-256 + ML-KEM-768 (post-quantum)',protoClassic:'Classic: ECDH P-256',
+alienGlyphsSwitchTitle:'Alien glyphs',alienGlyphsSwitchDesc:'Show codes as glyphs instead of Base64 (QR always uses Base64)',
+kxIntro:'No server. Swap two codes over any other app (chat, email, call) and both of you end up with the same secret. Hybrid stays safe even if one of the two algorithms is broken, but needs internet once to load the ML-KEM library. Nothing of yours is sent.',
+card1Title:'1. I start',card1Hint:'Make an offer, send it to your friend, then paste their reply.',makeOffer:'Make offer',copyOffer:'Copy offer',qr:'QR',
+offerPlaceholder:'Your offer appears here',replyPlaceholderPaste:'Paste their reply here',scanQr:'Scan QR',finish:'Finish',
+card2Title:'2. They started',card2Hint:'Paste the offer you received, then send the reply back.',pasteOffer:'Paste offer',makeReply:'Make reply',
+offerPlaceholderPaste:'Paste their offer here',replyPlaceholder:'Your reply appears here',copyReply:'Copy reply',
+kresTitle:'✅ Shared secret ready',kresHint:'Read the check code aloud to each other. If it differs, someone tampered with the codes: start again.',useAsKey:'Use as my key',copySecret:'Copy secret',
+checkCodePrefix:'Check code: ',hybridPQ:'hybrid, post-quantum',classicLbl:'classic',
+messageLabel:'Message',addFiles:'Add files',msgPlaceholder:'Type text to encrypt, or paste an encrypted message to decrypt. Drop any file here to encrypt it as a file.',
+charSuffix:' characters',ctrlEnterHint:'Ctrl+Enter encrypts',encryptBtn:'Encrypt',decryptBtn:'Decrypt',swapBtn:'Swap',swapTitle:'Move the result into the message box',clearBtn:'Clear',
+alienScriptTitle:'Alien script',alienScriptDesc:'Glyphs instead of Base64',copyAfterTitle:'Copy after encrypting',copyAfterDesc:'Puts the result on your clipboard',
+autoClearTitle:'Auto-clear when idle',autoClearDesc:'Wipes this page after 5 minutes',resultLabel:'Result',share:'Share',saveTxt:'Save .txt',resultPlaceholder:'The result appears here.',
+filesLabel:'Files',filesHint:'Any type. Uses the key or key pair set above.',outputFormatLabel:'Output format',fmtAlienLabel:'Alien glyphs',fmtBinaryLabel:'Binary',
+dznTitle:'Drop files or folders here',dznSub:'or tap to choose (photos, videos, PDFs, zips, anything)',addFolder:'Add folder',
+compressTitle:'Compress first',compressDesc:'Smaller files. Best for documents, text, code',autosaveTitle:'Auto-save',autosaveDesc:"Download each file when it's done",
+encryptFiles:'Encrypt files',decryptFiles:'Decrypt files',saveAll:'Save all',clearList:'Clear list',
+fzHint:'A folder becomes one archive: <b>my_folder.enc.alien</b> or <b>my_folder.enc</b>. Decrypting gives you <b>my_folder.zip</b>, which any device can open. Alien glyphs: 30 MB max. Binary: up to 4 GB (folders 500 MB). Original names are restored when you decrypt.',
+readyToDecrypt:'Ready to decrypt',readyArrow:'Ready → {name}',save:'Save',remove:'Remove',
+qrFriendHint:'Your friend opens Scan QR and points the camera here, or you send them a screenshot.',qrPoint:'Point the camera at the QR code.',chooseImage:'Choose image',closeBtn:'Close',
+vaultTitle:'Vault password',vaultHint:'This password locks your master key inside this browser. If you forget it, the saved key cannot be recovered.',vaultPh:'Vault password',vaultPh2:'Repeat password',continueBtn:'Continue',cancelBtn:'Cancel',confirmBtn:'Confirm',
+vaultChooseTitle:'Choose a vault password',vaultUnlockTitle:'Unlock master key',vaultEnterPw:'Enter the password.',vaultMin8:'Use at least 8 characters.',vaultMismatch:'The two passwords differ.',vaultWrong:'Wrong vault password.',
+wipeConfirmTitle:'Wipe everything on this page?',wipeConfirmBody:'Keys, messages, files and key-exchange codes will be cleared from this page. Your saved master key is not affected.',wipeConfirmOk:'Wipe',
+forgetConfirmTitle:'Forget master key?',forgetConfirmBody:'The saved master key will be deleted from this browser. This cannot be undone.',forgetConfirmOk:'Forget',
+toastNothingCopy:'Nothing to copy',toastCopied:'Copied',toastPasted:'Pasted',toastClipboardBlocked:'Clipboard blocked. Paste with your keyboard.',
+toastFileTooLarge2MB:'File too large (2 MB max)',errSomethingWrong:'Something went wrong: ',
+toastRandomKeyMade:'Random key made. Store it safely; messages need it.',toastEnterKeyFirst:'Enter a key first',
+statusGenRsa:'Generating RSA-2048 keys…',statusGenRsaDone:'Key pair ready.',
+toastNoPem:'No PEM key found in that file',toastKeyImported:'Key imported',toastNoKeysSave:'No keys to save',toastKeysSaved:'Saved. Keep private_key.pem secret.',
+toastClearedPage:'Cleared from this page',toastNothingShare:'Nothing to share',toastNothingSave:'Nothing to save',toastNothingSaveYet:'Nothing to save yet',
+errInvalidKey:'Invalid key',errNotPub:'Not a public key. It should start with BEGIN PUBLIC KEY.',errNotPriv:'Not a private key. It should start with BEGIN PRIVATE KEY.',errConvertPkcs8:'Convert this key to PKCS#8 (BEGIN PRIVATE KEY).',
+errEnterKey:'Enter a passphrase or key first.',errTypeMsg:'Type a message to encrypt first.',errAddPub:'Add a public key first, or generate a key pair.',
+encryptedWithStatus:'Encrypted with {h}.',errPasteMsg:'Paste an encrypted message first.',errAddPriv:'Add your private key first.',statusDecryptedDone:'Decrypted.',
+mFormat:"This doesn't look like a message from this app, or part of it is missing.",mRsa:'This is a key pair message. Switch to Key pair to open it.',mAes:'This is a passphrase message. Switch to Passphrase to open it.',
+mLegacy:'This passphrase message came from an older version. It only opens in the browser that made it.',mUsed:'This one-time message was already opened on this device.',
+mWrong:"Couldn't decrypt. The key is wrong, or the message was changed.",mWrongR:"Couldn't decrypt. It was encrypted for a different key pair.",
+errPQLoad:'Could not load the post-quantum library. Check your internet, or use Classic.',
+statusOfferReady:'Offer ready. Send it, then paste the reply.',statusReplyReady:'Reply ready. Send it back.',statusSharedReady:'Shared secret ready.',errMakeOfferFirst:'Make an offer first.',
+toastSwitchedAlien:'Switched to alien glyphs to match',toastSwitchedBase64:'Switched to Base64 to match',
+errAddFiles:'Add some files first.',statusEncrypting:'Encrypting…',statusDecrypting:'Decrypting…',
+fileEncryptedSize:'Encrypted · {sz}',fileDecryptedTag:'Decrypted',failedPrefix:'Failed: ',
+filesResultEnc:'{ok} of {total} file(s) encrypted.',filesResultDec:'{ok} of {total} file(s) decrypted.',filesCountSuffix:' · {n} files',
+errFolderTooBig:'Folder over 500 MB.',errFileTooBig:'File over 4 GB.',errAlienTooBig:'Too big for alien script (30 MB). Turn it off.',
+statusLocking:'Locking master key…',toastMasterLocked:'Master key locked and saved',statusUnlocking:'Unlocking…',toastMasterLoaded:'Master key loaded',
+errNothingShow:'Nothing to show yet.',errQRLibMissing:'QR library not found. Save qrcode.js next to this page, or go online.',qrFailed:'QR failed',qrNotFound:'No QR code found in that image.',cameraUnavailable:'Camera not available. Choose an image instead.',toastQrRead:'QR read',
+errSwitchModeFiles:'Switch to Passphrase or Key pair to encrypt files',errSecureContext:'Encryption needs a secure context: open this file over https or localhost.',
+toastIdleCleared:'Cleared after 5 minutes idle',errEmptyFolder:'That folder is empty',toastMasterRemoved:'Master key removed',toastKxSetKey:'Shared secret set as your key',toastNoSecretYet:'No secret yet',
+statusMakingOffer:'Making offer…',statusMakingReply:'Making reply…',statusFinishing:'Finishing…',statusEncryptingFiles:'Encrypting files…',statusDecryptingFiles:'Decrypting files…'
+},fa:{
+appTitle:'🛸 رمزنگاری بیگانه',tagline:'همه‌چیز در مرورگر شما رمزگذاری می‌شود. داده‌های شما هرگز از آن خارج نمی‌شود.',
+wipeBtn:'پاک‌سازی',wipeTitle:'پاک کردن کلیدها، پیام و نتیجه از این صفحه',themeLight:'روشن',themeDark:'تیره',langBtn:'فارسی',
+tabPass:'گذرواژه',tabKeyPair:'جفت‌کلید',tabKx:'تبادل کلید',
+secretKeyLabel:'کلید محرمانه',keyPlaceholder:'گذرواژه، یا کلید هگز ۶۴ کاراکتری',show:'نمایش',hide:'پنهان',paste:'جای‌گذاری',randomKey:'کلید تصادفی',copy:'کپی',
+hintEmpty:'یک گذرواژه وارد کنید، یا با «کلید تصادفی» یک کلید ۲۵۶ بیتی تصادفی بسازید.',hintHex:'کلید ۲۵۶ بیتی، همان‌طور که هست استفاده می‌شود.',hintShort:'گذرواژه کوتاه است. گذرواژه بلندتر امن‌تر است.',hintStretched:'گذرواژه با PBKDF2 (۶۰۰٬۰۰۰ دور) کشیده می‌شود. رمزگذاری کمی طول می‌کشد.',
+masterSaveBtn:'ذخیره به‌عنوان کلید اصلی',masterUseBtn:'استفاده از کلید اصلی',masterLockBtn:'قفل کردن',masterForgetBtn:'فراموش کردن',
+masterNone:'هیچ کلید اصلی ذخیره نشده است.',masterLocked:'کلید اصلی اینجا ذخیره شده و با گذرواژه مخزن قفل شده است.',masterUnlocked:'یک کلید اصلی قدیمی بدون قفل ذخیره شده است. آن را با گذرواژه قفل کنید.',
+genRsaBtn:'ساخت جفت‌کلید',importPemBtn:'وارد کردن فایل .pem',saveKeysBtn:'ذخیره کلیدها',
+publicKeyLabel:'کلید عمومی',privateKeyLabel:'کلید خصوصی',pillNotSet:'تنظیم نشده',pillInvalid:'نامعتبر',pillReadyEnc:'آماده برای رمزگذاری',pillReadyDec:'آماده برای رمزگشایی',
+pubPlaceholder:'کلید عمومی فرد را برای رمزگذاری اینجا جای‌گذاری کنید',privPlaceholder:'برای رمزگشایی لازم است. آن را مخفی نگه دارید.',
+pubHint:'این را به اشتراک بگذارید. هرکس آن را داشته باشد می‌تواند پیامی بنویسد که فقط شما می‌توانید بخوانید. برای اطمینان از اصالت کلید، اثر انگشت را با صاحب آن مقایسه کنید.',
+reveal:'نمایش',fingerprintPrefix:'اثر انگشت: ',
+protocolLabel:'پروتکل',protoHybrid:'ترکیبی: ECDH P-256 + ML-KEM-768 (پسا-کوانتومی)',protoClassic:'کلاسیک: ECDH P-256',
+alienGlyphsSwitchTitle:'حروف بیگانه',alienGlyphsSwitchDesc:'نمایش کدها به‌صورت حروف بیگانه به‌جای Base64 (کد QR همیشه از Base64 استفاده می‌کند)',
+kxIntro:'بدون سرور. دو کد را از طریق هر برنامه دیگری (چت، ایمیل، تماس) با هم جابه‌جا کنید تا هر دوی شما به یک رمز مشترک برسید. حالت ترکیبی حتی اگر یکی از دو الگوریتم شکسته شود همچنان امن می‌ماند، اما یک‌بار برای بارگذاری کتابخانه ML-KEM به اینترنت نیاز دارد. هیچ‌چیز از شما ارسال نمی‌شود.',
+card1Title:'۱. من شروع می‌کنم',card1Hint:'یک پیشنهاد بسازید، آن را برای دوستتان بفرستید، سپس پاسخ او را جای‌گذاری کنید.',makeOffer:'ساخت پیشنهاد',copyOffer:'کپی پیشنهاد',qr:'QR',
+offerPlaceholder:'پیشنهاد شما اینجا ظاهر می‌شود',replyPlaceholderPaste:'پاسخ آن‌ها را اینجا جای‌گذاری کنید',scanQr:'اسکن QR',finish:'پایان',
+card2Title:'۲. آن‌ها شروع کردند',card2Hint:'پیشنهادی که دریافت کرده‌اید را جای‌گذاری کنید، سپس پاسخ را بفرستید.',pasteOffer:'جای‌گذاری پیشنهاد',makeReply:'ساخت پاسخ',
+offerPlaceholderPaste:'پیشنهاد آن‌ها را اینجا جای‌گذاری کنید',replyPlaceholder:'پاسخ شما اینجا ظاهر می‌شود',copyReply:'کپی پاسخ',
+kresTitle:'✅ کلید مشترک آماده است',kresHint:'کد بررسی را با صدای بلند برای هم بخوانید. اگر متفاوت بود، یعنی کسی در کدها دست‌کاری کرده؛ دوباره شروع کنید.',useAsKey:'استفاده به‌عنوان کلید من',copySecret:'کپی کلید مشترک',
+checkCodePrefix:'کد بررسی: ',hybridPQ:'ترکیبی، پسا-کوانتومی',classicLbl:'کلاسیک',
+messageLabel:'پیام',addFiles:'افزودن فایل',msgPlaceholder:'متن را برای رمزگذاری تایپ کنید، یا پیام رمزگذاری‌شده را برای رمزگشایی جای‌گذاری کنید. هر فایلی را اینجا رها کنید تا به‌صورت فایل رمزگذاری شود.',
+charSuffix:' نویسه',ctrlEnterHint:'Ctrl+Enter رمزگذاری می‌کند',encryptBtn:'رمزگذاری',decryptBtn:'رمزگشایی',swapBtn:'جابه‌جایی',swapTitle:'انتقال نتیجه به کادر پیام',clearBtn:'پاک کردن',
+alienScriptTitle:'رمز بیگانه',alienScriptDesc:'حروف بیگانه به‌جای Base64',copyAfterTitle:'کپی پس از رمزگذاری',copyAfterDesc:'نتیجه را در کلیپ‌بورد قرار می‌دهد',
+autoClearTitle:'پاک‌سازی خودکار در بی‌کاری',autoClearDesc:'این صفحه را پس از ۵ دقیقه پاک می‌کند',resultLabel:'نتیجه',share:'اشتراک‌گذاری',saveTxt:'ذخیره .txt',resultPlaceholder:'نتیجه اینجا ظاهر می‌شود.',
+filesLabel:'فایل‌ها',filesHint:'هر نوع فایلی. از کلید یا جفت‌کلید تنظیم‌شده در بالا استفاده می‌کند.',outputFormatLabel:'قالب خروجی',fmtAlienLabel:'حروف بیگانه',fmtBinaryLabel:'باینری',
+dznTitle:'فایل‌ها یا پوشه‌ها را اینجا رها کنید',dznSub:'یا برای انتخاب ضربه بزنید (عکس، ویدیو، PDF، zip، هر چیزی)',addFolder:'افزودن پوشه',
+compressTitle:'ابتدا فشرده‌سازی',compressDesc:'فایل‌های کوچک‌تر. بهترین گزینه برای سند، متن و کد',autosaveTitle:'ذخیره خودکار',autosaveDesc:'هر فایل را پس از اتمام دانلود می‌کند',
+encryptFiles:'رمزگذاری فایل‌ها',decryptFiles:'رمزگشایی فایل‌ها',saveAll:'ذخیره همه',clearList:'پاک کردن فهرست',
+fzHint:'یک پوشه به یک بایگانی تبدیل می‌شود: <b>my_folder.enc.alien</b> یا <b>my_folder.enc</b>. رمزگشایی به شما <b>my_folder.zip</b> می‌دهد که هر دستگاهی می‌تواند آن را باز کند. حروف بیگانه حداکثر ۳۰ مگابایت. باینری تا ۴ گیگابایت (پوشه‌ها حداکثر ۵۰۰ مگابایت). نام‌های اصلی هنگام رمزگشایی بازگردانده می‌شوند.',
+readyToDecrypt:'آماده برای رمزگشایی',readyArrow:'آماده ← {name}',save:'ذخیره',remove:'حذف',
+qrFriendHint:'دوست شما «اسکن QR» را باز کرده و دوربین را اینجا می‌گیرد، یا می‌توانید یک اسکرین‌شات برایش بفرستید.',qrPoint:'دوربین را روی کد QR بگیرید.',chooseImage:'انتخاب تصویر',closeBtn:'بستن',
+vaultTitle:'گذرواژه مخزن',vaultHint:'این گذرواژه کلید اصلی شما را درون این مرورگر قفل می‌کند. اگر آن را فراموش کنید، کلید ذخیره‌شده قابل بازیابی نیست.',vaultPh:'گذرواژه مخزن',vaultPh2:'تکرار گذرواژه',continueBtn:'ادامه',cancelBtn:'لغو',confirmBtn:'تأیید',
+vaultChooseTitle:'یک گذرواژه مخزن انتخاب کنید',vaultUnlockTitle:'باز کردن قفل کلید اصلی',vaultEnterPw:'گذرواژه را وارد کنید.',vaultMin8:'حداقل ۸ کاراکتر استفاده کنید.',vaultMismatch:'دو گذرواژه با هم متفاوت‌اند.',vaultWrong:'گذرواژه مخزن اشتباه است.',
+wipeConfirmTitle:'همه‌چیز در این صفحه پاک شود؟',wipeConfirmBody:'کلیدها، پیام‌ها، فایل‌ها و کدهای تبادل کلید از این صفحه پاک خواهند شد. کلید اصلی ذخیره‌شده شما تحت تأثیر قرار نمی‌گیرد.',wipeConfirmOk:'پاک‌سازی',
+forgetConfirmTitle:'کلید اصلی فراموش شود؟',forgetConfirmBody:'کلید اصلی ذخیره‌شده از این مرورگر حذف خواهد شد. این کار قابل بازگشت نیست.',forgetConfirmOk:'فراموش کردن',
+toastNothingCopy:'چیزی برای کپی نیست',toastCopied:'کپی شد',toastPasted:'جای‌گذاری شد',toastClipboardBlocked:'کلیپ‌بورد مسدود است. با صفحه‌کلید جای‌گذاری کنید.',
+toastFileTooLarge2MB:'فایل خیلی بزرگ است (حداکثر ۲ مگابایت)',errSomethingWrong:'مشکلی پیش آمد: ',
+toastRandomKeyMade:'کلید تصادفی ساخته شد. آن را ایمن نگه دارید؛ پیام‌ها به آن نیاز دارند.',toastEnterKeyFirst:'ابتدا کلیدی وارد کنید',
+statusGenRsa:'در حال ساخت کلیدهای RSA-2048…',statusGenRsaDone:'جفت‌کلید آماده است.',
+toastNoPem:'هیچ کلید PEM در آن فایل یافت نشد',toastKeyImported:'کلید وارد شد',toastNoKeysSave:'کلیدی برای ذخیره نیست',toastKeysSaved:'ذخیره شد. فایل private_key.pem را مخفی نگه دارید.',
+toastClearedPage:'از این صفحه پاک شد',toastNothingShare:'چیزی برای اشتراک‌گذاری نیست',toastNothingSave:'چیزی برای ذخیره نیست',toastNothingSaveYet:'هنوز چیزی برای ذخیره نیست',
+errInvalidKey:'کلید نامعتبر',errNotPub:'این یک کلید عمومی نیست. باید با BEGIN PUBLIC KEY شروع شود.',errNotPriv:'این یک کلید خصوصی نیست. باید با BEGIN PRIVATE KEY شروع شود.',errConvertPkcs8:'این کلید را به PKCS#8 (BEGIN PRIVATE KEY) تبدیل کنید.',
+errEnterKey:'ابتدا یک گذرواژه یا کلید وارد کنید.',errTypeMsg:'ابتدا پیامی برای رمزگذاری تایپ کنید.',errAddPub:'ابتدا یک کلید عمومی اضافه کنید یا یک جفت‌کلید بسازید.',
+encryptedWithStatus:'رمزگذاری شد با {h}.',errPasteMsg:'ابتدا یک پیام رمزگذاری‌شده جای‌گذاری کنید.',errAddPriv:'ابتدا کلید خصوصی خود را اضافه کنید.',statusDecryptedDone:'رمزگشایی شد.',
+mFormat:'این شبیه پیامی از این برنامه نیست، یا بخشی از آن ناقص است.',mRsa:'این یک پیام جفت‌کلید است. برای باز کردن آن به «جفت‌کلید» بروید.',mAes:'این یک پیام گذرواژه‌ای است. برای باز کردن آن به «گذرواژه» بروید.',
+mLegacy:'این پیام گذرواژه‌ای از یک نسخه قدیمی‌تر است. فقط در همان مرورگری که ساخته شده باز می‌شود.',mUsed:'این پیام یک‌بارمصرف قبلاً در این دستگاه باز شده است.',
+mWrong:'رمزگشایی ممکن نشد. کلید اشتباه است، یا پیام تغییر کرده است.',mWrongR:'رمزگشایی ممکن نشد. برای جفت‌کلید دیگری رمزگذاری شده بود.',
+errPQLoad:'کتابخانه پسا-کوانتومی بارگذاری نشد. اینترنت خود را بررسی کنید، یا از حالت کلاسیک استفاده کنید.',
+statusOfferReady:'پیشنهاد آماده است. آن را بفرستید، سپس پاسخ را جای‌گذاری کنید.',statusReplyReady:'پاسخ آماده است. آن را برگردانید.',statusSharedReady:'کلید مشترک آماده است.',errMakeOfferFirst:'ابتدا یک پیشنهاد بسازید.',
+toastSwitchedAlien:'برای هماهنگی به حروف بیگانه تغییر کرد',toastSwitchedBase64:'برای هماهنگی به Base64 تغییر کرد',
+errAddFiles:'ابتدا چند فایل اضافه کنید.',statusEncrypting:'در حال رمزگذاری…',statusDecrypting:'در حال رمزگشایی…',
+fileEncryptedSize:'رمزگذاری شد · {sz}',fileDecryptedTag:'رمزگشایی شد',failedPrefix:'ناموفق: ',
+filesResultEnc:'{ok} از {total} فایل رمزگذاری شد.',filesResultDec:'{ok} از {total} فایل رمزگشایی شد.',filesCountSuffix:' · {n} فایل',
+errFolderTooBig:'پوشه بیش از ۵۰۰ مگابایت است.',errFileTooBig:'فایل بیش از ۴ گیگابایت است.',errAlienTooBig:'برای حروف بیگانه خیلی بزرگ است (حداکثر ۳۰ مگابایت). آن را خاموش کنید.',
+statusLocking:'در حال قفل کردن کلید اصلی…',toastMasterLocked:'کلید اصلی قفل و ذخیره شد',statusUnlocking:'در حال باز کردن قفل…',toastMasterLoaded:'کلید اصلی بارگذاری شد',
+errNothingShow:'هنوز چیزی برای نمایش نیست.',errQRLibMissing:'کتابخانه QR پیدا نشد. فایل qrcode.js را کنار این صفحه ذخیره کنید، یا آنلاین شوید.',qrFailed:'QR ناموفق بود',qrNotFound:'هیچ کد QR در آن تصویر پیدا نشد.',cameraUnavailable:'دوربین در دسترس نیست. به‌جای آن یک تصویر انتخاب کنید.',toastQrRead:'QR خوانده شد',
+errSwitchModeFiles:'برای رمزگذاری فایل‌ها به «گذرواژه» یا «جفت‌کلید» بروید',errSecureContext:'رمزگذاری به یک بستر امن نیاز دارد: این فایل را از طریق https یا localhost باز کنید.',
+toastIdleCleared:'پس از ۵ دقیقه بی‌کاری پاک شد',errEmptyFolder:'آن پوشه خالی است',toastMasterRemoved:'کلید اصلی حذف شد',toastKxSetKey:'کلید مشترک به‌عنوان کلید شما تنظیم شد',toastNoSecretYet:'هنوز کلید مشترکی نیست',
+statusMakingOffer:'در حال ساخت پیشنهاد…',statusMakingReply:'در حال ساخت پاسخ…',statusFinishing:'در حال اتمام…',statusEncryptingFiles:'در حال رمزگذاری فایل‌ها…',statusDecryptingFiles:'در حال رمزگشایی فایل‌ها…'
+}};
+let curLang=st.get('alien_lang')||(((navigator.language||'').toLowerCase().startsWith('fa'))?'fa':'en');
+const TT=k=>(LANGS[curLang]&&LANGS[curLang][k])||LANGS.en[k]||k;
+const fmtT=(k,o)=>{let s=TT(k);for(const p in o)s=s.replaceAll('{'+p+'}',o[p]);return s};
+const locNum=n=>n.toLocaleString(curLang=='fa'?'fa-IR':'en-US');
+function applyLang(){document.documentElement.lang=curLang;document.documentElement.dir=curLang=='fa'?'rtl':'ltr';document.title=TT('appTitle');
+ for(const el of document.querySelectorAll('[data-i18n]'))el.innerHTML=TT(el.dataset.i18n);
+ for(const el of document.querySelectorAll('[data-i18n-ph]'))el.placeholder=TT(el.dataset.i18nPh);
+ for(const el of document.querySelectorAll('[data-i18n-title]'))el.title=TT(el.dataset.i18nTitle);
+ $('lng').textContent=curLang=='fa'?LANGS.en.langBtn:LANGS.fa.langBtn;
+ $('thm').textContent=document.documentElement.dataset.theme=='dark'?TT('themeLight'):TT('themeDark');
+ hint();master();pills();count();fDraw()}
 const cat=(...a)=>{const o=new Uint8Array(a.reduce((n,x)=>n+x.length,0));let p=0;for(const x of a){o.set(x,p);p+=x.length}return o};
 const hex=b=>[...b].map(x=>x.toString(16).padStart(2,'0')).join(''),unhex=h=>Uint8Array.from(h.match(/../g)||[],x=>parseInt(x,16));
 const b64=b=>{let s='';for(let i=0;i<b.length;i+=8192)s+=String.fromCharCode(...b.subarray(i,i+8192));return btoa(s)};
@@ -161,8 +300,8 @@ const gEnc=b=>{let o='',s=0;b.forEach((v,i)=>{o+=G[(v+sh(i))&255];if((i+1)%8===0
 const gDec=t=>{const o=[];let i=0;for(const c of t){const v=R.get(c);if(v!==undefined)o.push((v-sh(i++)+256)&255)}return Uint8Array.from(o)};
 const isG=t=>{for(const c of t)if(R.has(c))return true;return false};
 class E extends Error{constructor(m,el,c){super(m);this.el=el;this.clear=c}}
-const M={format:"This doesn't look like a message from this app, or part of it is missing.",rsa:'This is a key pair message. Switch to Key pair to open it.',aes:'This is a passphrase message. Switch to Passphrase to open it.',legacy:'This passphrase message came from an older version. It only opens in the browser that made it.',used:'This one-time message was already opened on this device.',wrong:"Couldn't decrypt. The key is wrong, or the message was changed.",wrongR:"Couldn't decrypt. It was encrypted for a different key pair."};
-const fail=(k,el)=>{throw new E(M[k],el,true)};
+const M=()=>({format:TT('mFormat'),rsa:TT('mRsa'),aes:TT('mAes'),legacy:TT('mLegacy'),used:TT('mUsed'),wrong:TT('mWrong'),wrongR:TT('mWrongR')});
+const fail=(k,el)=>{throw new E(M()[k],el,true)};
 const pack=(raw,alien)=>{const s=b64(raw);return alien?gEnc(te.encode(s)):s};
 const unpack=t=>{t=t.trim();try{return unb64(isG(t)?td.decode(gDec(t)):t.replace(/\s+/g,''))}catch{fail('format')}};
 const isHex=k=>/^[0-9a-fA-F]{64}$/.test(k);
@@ -177,60 +316,60 @@ const legacy=async p=>{let s;try{s=st.get('alien_salt_'+btoa(p).substring(0,16))
 const OA={name:'RSA-OAEP',hash:'SHA-256'};let pub=null,priv=null;
 const pem=(d,l)=>`-----BEGIN ${l}-----\n${b64(new Uint8Array(d)).match(/.{1,64}/g).join('\n')}\n-----END ${l}-----`;
 const unpem=(t,l)=>{const m=t.match(new RegExp(`-----BEGIN ${l}-----([\\s\\S]*?)-----END ${l}-----`));return m?unb64(m[1].replace(/\s+/g,'')):null};
-async function loadPub(t){t=t.trim();if(!t){pub=null;return}const d=unpem(t,'PUBLIC KEY');if(!d)throw new E('Not a public key. It should start with BEGIN PUBLIC KEY.');pub=await crypto.subtle.importKey('spki',d,OA,true,['encrypt'])}
-async function loadPriv(t){t=t.trim();if(!t){priv=null;return}const d=unpem(t,'PRIVATE KEY');if(!d)throw new E(/RSA PRIVATE/.test(t)?'Convert this key to PKCS#8 (BEGIN PRIVATE KEY).':'Not a private key. It should start with BEGIN PRIVATE KEY.');priv=await crypto.subtle.importKey('pkcs8',d,OA,true,['decrypt']);
+async function loadPub(t){t=t.trim();if(!t){pub=null;return}const d=unpem(t,'PUBLIC KEY');if(!d)throw new E(TT('errNotPub'));pub=await crypto.subtle.importKey('spki',d,OA,true,['encrypt'])}
+async function loadPriv(t){t=t.trim();if(!t){priv=null;return}const d=unpem(t,'PRIVATE KEY');if(!d)throw new E(/RSA PRIVATE/.test(t)?TT('errConvertPkcs8'):TT('errNotPriv'));priv=await crypto.subtle.importKey('pkcs8',d,OA,true,['decrypt']);
  if(!$('pub').value.trim()){const j=await crypto.subtle.exportKey('jwk',priv);pub=await crypto.subtle.importKey('jwk',{kty:'RSA',n:j.n,e:j.e,alg:'RSA-OAEP-256',ext:true},OA,true,['encrypt']);$('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY')}}
 
 /* ---------- UI ---------- */
 let mode='aes',out='',kind='text',busy=false,af=0,tt;
 const toast=(m,e)=>{const t=$('toast');t.textContent=m;t.className='on'+(e?' e':'');clearTimeout(tt);tt=setTimeout(()=>t.className='',e?4000:2000)};
 const status=(m,k)=>{const s=$('st');s.textContent=m;s.className=k||''};
-const count=()=>{const v=$('inp').value.trim(),c=v.length>20&&(isG(v)||/^[A-Za-z0-9+/=\s]{60,}$/.test(v));document.querySelector('[data-a=enc]').classList.toggle('p',!c);document.querySelector('[data-a=dec]').classList.toggle('p',c);const n=$('inp').value.length;$('ci').textContent=n.toLocaleString()+' characters';$('co').textContent=out?out.length.toLocaleString()+' characters':''};
+const count=()=>{const v=$('inp').value.trim(),c=v.length>20&&(isG(v)||/^[A-Za-z0-9+/=\s]{60,}$/.test(v));document.querySelector('[data-a=enc]').classList.toggle('p',!c);document.querySelector('[data-a=dec]').classList.toggle('p',c);const n=$('inp').value.length;$('ci').textContent=locNum(n)+TT('charSuffix');$('co').textContent=out?locNum(out.length)+TT('charSuffix'):''};
 function show(t,k,anim){out=t;kind=k;const o=$('out');o.className=k=='text'?'':isG(t)?'g':'m';cancelAnimationFrame(af);o.value=t;
  if(anim&&!RM&&t){const s=performance.now(),d=Math.min(900,300+t.length*2),P=isG(t)?G:[...'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'];
   const f=n=>{const p=(n-s)/d;if(p>=1){o.value=t;return}let x='';for(let i=0;i<14;i++)x+=P[Math.random()*P.length|0];o.value=t.slice(0,Math.floor(p*t.length))+x;af=requestAnimationFrame(f)};af=requestAnimationFrame(f)}count()}
-async function copy(t){if(!t)return toast('Nothing to copy');try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.append(a);a.select();document.execCommand('copy');a.remove()}toast('Copied')}
-async function paste(el){try{el.value=await navigator.clipboard.readText();el.dispatchEvent(new Event('input'));toast('Pasted')}catch{el.focus();toast('Clipboard blocked. Paste with your keyboard.')}}
+async function copy(t){if(!t)return toast(TT('toastNothingCopy'));try{await navigator.clipboard.writeText(t)}catch{const a=document.createElement('textarea');a.value=t;document.body.append(a);a.select();document.execCommand('copy');a.remove()}toast(TT('toastCopied'))}
+async function paste(el){try{el.value=await navigator.clipboard.readText();el.dispatchEvent(new Event('input'));toast(TT('toastPasted'))}catch{el.focus();toast(TT('toastClipboardBlocked'))}}
 function dl(n,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1e3)}
-function pick(accept,fn){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=async()=>{const f=i.files[0];if(!f)return;if(f.size>2e6)return toast('File too large (2 MB max)',1);fn(await f.text())};i.click()}
+function pick(accept,fn){const i=document.createElement('input');i.type='file';i.accept=accept;i.onchange=async()=>{const f=i.files[0];if(!f)return;if(f.size>2e6)return toast(TT('toastFileTooLarge2MB'),1);fn(await f.text())};i.click()}
 async function run(msg,fn){if(busy)return;busy=true;document.body.classList.add('busy');status(msg);await new Promise(r=>setTimeout(r,30));
- try{await fn()}catch(e){if(e instanceof E){status(e.message,'err');toast(e.message,1);e.clear&&show('','text');e.el&&e.el.focus()}else{console.error(e);status('Something went wrong: '+e.message,'err')}}finally{busy=false;document.body.classList.remove('busy')}}
+ try{await fn()}catch(e){if(e instanceof E){status(e.message,'err');toast(e.message,1);e.clear&&show('','text');e.el&&e.el.focus()}else{console.error(e);status(TT('errSomethingWrong')+e.message,'err')}}finally{busy=false;document.body.classList.remove('busy')}}
 function setMode(m){mode=m;st.set('alien_mode',m);for(const x of['aes','rsa','kx']){const s=m==x;$('t-'+x).setAttribute('aria-selected',s);$('t-'+x).tabIndex=s?0:-1;$('p-'+x).hidden=!s}$('mg').hidden=$('fz').hidden=m=='kx'}
 function hint(){const k=$('key').value.trim(),h=$('kh');h.className='hint';
- h.textContent=!k?'Use a passphrase, or make a random 256-bit key with Random key.':isHex(k)?'256-bit key, used as is.':k.length<10?'Short passphrase. A longer one is safer.':'Passphrase, stretched with PBKDF2 (600,000 rounds). Encrypting takes a moment.';
+ h.textContent=!k?TT('hintEmpty'):isHex(k)?TT('hintHex'):k.length<10?TT('hintShort'):TT('hintStretched');
  if(k&&!isHex(k)&&k.length<10)h.classList.add('w2')}
-function master(){const v=!!st.get('alien_vault'),l=!!st.get('alien_master_key');$('ms').textContent=v?'Master key saved here, locked with your vault password.':l?'An old master key is saved unlocked. Lock it with a password.':'No master key saved.';$('mu').hidden=!v;$('ml').hidden=!l;$('md').hidden=!(v||l)}
-async function fp(){const e=$('fp');if(!pub){e.textContent='';return}const h=hex(new Uint8Array(await crypto.subtle.digest('SHA-256',await crypto.subtle.exportKey('spki',pub))));e.textContent='Fingerprint: '+h.slice(0,32).match(/.{4}/g).join(' ')}
-function pills(){fp();for(const[p,k,t]of[['pp',pub,'Ready to encrypt'],['vp',priv,'Ready to decrypt']]){const e=$(p);if(e.dataset.bad){e.className='pill bad';e.textContent='Invalid'}else{e.className='pill'+(k?' on':'');e.textContent=k?t:'Not set'}}}
-async function keyText(w){const el=$(w),bad=w=='pub'?'pp':'vp';try{await(w=='pub'?loadPub:loadPriv)(el.value);delete $(bad).dataset.bad}catch(e){w=='pub'?pub=null:priv=null;$(bad).dataset.bad=1;status(e.message||'Invalid key','err')}pills()}
-const secret=()=>{const k=$('key').value.trim();if(!k)throw new E('Enter a passphrase or key first.',$('key'));return k};
-async function encrypt(){const t=$('inp').value;if(!t.trim())throw new E('Type a message to encrypt first.',$('inp'));let raw,how;
+function master(){const v=!!st.get('alien_vault'),l=!!st.get('alien_master_key');$('ms').textContent=v?TT('masterLocked'):l?TT('masterUnlocked'):TT('masterNone');$('mu').hidden=!v;$('ml').hidden=!l;$('md').hidden=!(v||l)}
+async function fp(){const e=$('fp');if(!pub){e.textContent='';return}const h=hex(new Uint8Array(await crypto.subtle.digest('SHA-256',await crypto.subtle.exportKey('spki',pub))));e.textContent=TT('fingerprintPrefix')+h.slice(0,32).match(/.{4}/g).join(' ')}
+function pills(){fp();for(const[p,k,t]of[['pp',pub,TT('pillReadyEnc')],['vp',priv,TT('pillReadyDec')]]){const e=$(p);if(e.dataset.bad){e.className='pill bad';e.textContent=TT('pillInvalid')}else{e.className='pill'+(k?' on':'');e.textContent=k?t:TT('pillNotSet')}}}
+async function keyText(w){const el=$(w),bad=w=='pub'?'pp':'vp';try{await(w=='pub'?loadPub:loadPriv)(el.value);delete $(bad).dataset.bad}catch(e){w=='pub'?pub=null:priv=null;$(bad).dataset.bad=1;status(e.message||TT('errInvalidKey'),'err')}pills()}
+const secret=()=>{const k=$('key').value.trim();if(!k)throw new E(TT('errEnterKey'),$('key'));return k};
+async function encrypt(){const t=$('inp').value;if(!t.trim())throw new E(TT('errTypeMsg'),$('inp'));let raw,how;
  if(mode=='aes'){const k=secret();how='AES-256-GCM';if(isHex(k))raw=await seal(t,unhex(k));else{const s=rand(16);raw=await seal(t,await kdf(k,s),s)}}
- else{if(!pub)throw new E('Add a public key first, or generate a key pair.',$('pub'));how='RSA-2048 + AES-256-GCM';const k=rand(32),w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,k));raw=te.encode(JSON.stringify({k:b64(w),d:b64(await seal(t,k))}))}
- const alien=$('al').checked;show(pack(raw,alien),'cipher',alien);status('Encrypted with '+how+'.','ok');if($('ca').checked)copy(out)}
-async function decrypt(){const t=$('inp').value;if(!t.trim())throw new E('Paste an encrypted message first.',$('inp'));let r;
+ else{if(!pub)throw new E(TT('errAddPub'),$('pub'));how='RSA-2048 + AES-256-GCM';const k=rand(32),w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,k));raw=te.encode(JSON.stringify({k:b64(w),d:b64(await seal(t,k))}))}
+ const alien=$('al').checked;show(pack(raw,alien),'cipher',alien);status(fmtT('encryptedWithStatus',{h:how}),'ok');if($('ca').checked)copy(out)}
+async function decrypt(){const t=$('inp').value;if(!t.trim())throw new E(TT('errPasteMsg'),$('inp'));let r;
  if(mode=='aes'){const k=secret(),d=unpack(t);r=await open(d,async s=>s?kdf(k,s):isHex(k)?unhex(k):legacy(k))}
- else{if(!priv)throw new E('Add your private key first.',$('priv'));const d=unpack(t);let j,key;try{j=JSON.parse(td.decode(d));if(!j.k||!j.d)throw 0}catch{fail(d[0]<=3?'aes':'format')}
+ else{if(!priv)throw new E(TT('errAddPriv'),$('priv'));const d=unpack(t);let j,key;try{j=JSON.parse(td.decode(d));if(!j.k||!j.d)throw 0}catch{fail(d[0]<=3?'aes':'format')}
   try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,unb64(j.k)))}catch{fail('wrongR')}r=await open(unb64(j.d),async()=>key)}
- show(r.text,'text');status('Decrypted.','ok')}
+ show(r.text,'text');status(TT('statusDecryptedDone'),'ok')}
 /* ---------- Key exchange: no server, codes travel through any other app ---------- */
 const EC={name:'ECDH',namedCurve:'P-256'},NONE=new Uint8Array(0);let kxS=null,kxSecret=null,pqL=null;
 async function loadPQ(){if(pqL)return pqL;for(const u of['./ml-kem.js','https://esm.sh/@noble/post-quantum@0.2.1/ml-kem','https://cdn.jsdelivr.net/npm/@noble/post-quantum@0.2.1/ml-kem.js/+esm']){try{const m=await import(u);if(m.ml_kem768)return pqL=m.ml_kem768}catch{}}
- throw new E('Could not load the post-quantum library. Check your internet, or use Classic.')}
+ throw new E(TT('errPQLoad'))}
 const kxKdf=async(parts,info)=>new Uint8Array(await crypto.subtle.deriveBits({name:'HKDF',hash:'SHA-256',salt:new Uint8Array(32),info},await crypto.subtle.importKey('raw',cat(...parts),'HKDF',false,['deriveBits']),256));
 async function kxDone(parts,tr){kxSecret=await kxKdf(parts,cat(te.encode('alien-key'),tr));const c=(await kxKdf(parts,cat(te.encode('alien-chk'),tr))).slice(0,6);
- $('kc').textContent='Check code: '+hex(c).match(/.{4}/g).join(' ').toUpperCase()+(parts[1].length?'  ·  hybrid, post-quantum':'  ·  classic');$('kres').hidden=false;kxS=null}
+ $('kc').textContent=TT('checkCodePrefix')+hex(c).match(/.{4}/g).join(' ').toUpperCase()+'  ·  '+(parts[1].length?TT('hybridPQ'):TT('classicLbl'));$('kres').hidden=false;kxS=null}
 const ecdh=async(priv,raw)=>new Uint8Array(await crypto.subtle.deriveBits({name:'ECDH',public:await crypto.subtle.importKey('raw',raw,EC,false,[])},priv,256));
 async function xStart(){const h=$('kp').value=='h',kp=await crypto.subtle.generateKey(EC,false,['deriveBits']);let kem=null,mp=NONE;
  if(h){kem=(await loadPQ()).keygen();mp=kem.publicKey}
- const o=cat(Uint8Array.of(h?0xA2:0xA1),new Uint8Array(await crypto.subtle.exportKey('raw',kp.publicKey)),mp);kxS={kp,kem,o};$('kres').hidden=true;$('ko').value=pack(o,$('al').checked);status('Offer ready. Send it, then paste the reply.','ok')}
+ const o=cat(Uint8Array.of(h?0xA2:0xA1),new Uint8Array(await crypto.subtle.exportKey('raw',kp.publicKey)),mp);kxS={kp,kem,o};$('kres').hidden=true;$('ko').value=pack(o,$('al').checked);status(TT('statusOfferReady'),'ok')}
 async function xRespond(){kxFollow('kt');const o=unpack($('kt').value),h=o[0]==0xA2;if(!(o[0]==0xA1||h)||o.length!=(h?1250:66))fail('format',$('kt'));
  const kp=await crypto.subtle.generateKey(EC,false,['deriveBits']),my=new Uint8Array(await crypto.subtle.exportKey('raw',kp.publicKey));let ss=NONE,ct=NONE;
  const ec=await ecdh(kp.privateKey,o.slice(1,66));if(h){const x=(await loadPQ()).encapsulate(o.slice(66));ct=x.cipherText;ss=x.sharedSecret}
- const rp=cat(Uint8Array.of(h?0xB2:0xB1),my,ct);await kxDone([ec,ss],cat(o,rp));$('kb').value=pack(rp,$('al').checked);status('Reply ready. Send it back.','ok')}
-async function xFinish(){kxFollow('kr');if(!kxS)throw new E('Make an offer first.');const r=unpack($('kr').value),h=r[0]==0xB2;if(!(r[0]==0xB1||h)||h!=(kxS.o[0]==0xA2)||r.length!=(h?1154:66))fail('format',$('kr'));
+ const rp=cat(Uint8Array.of(h?0xB2:0xB1),my,ct);await kxDone([ec,ss],cat(o,rp));$('kb').value=pack(rp,$('al').checked);status(TT('statusReplyReady'),'ok')}
+async function xFinish(){kxFollow('kr');if(!kxS)throw new E(TT('errMakeOfferFirst'));const r=unpack($('kr').value),h=r[0]==0xB2;if(!(r[0]==0xB1||h)||h!=(kxS.o[0]==0xA2)||r.length!=(h?1154:66))fail('format',$('kr'));
  const ec=await ecdh(kxS.kp.privateKey,r.slice(1,66));let ss=NONE;if(h)try{ss=(await loadPQ()).decapsulate(r.slice(66),kxS.kem.secretKey)}catch(e){if(e instanceof E)throw e;fail('format',$('kr'))}
- await kxDone([ec,ss],cat(kxS.o,r));status('Shared secret ready.','ok')}
+ await kxDone([ec,ss],cat(kxS.o,r));status(TT('statusSharedReady'),'ok')}
 /* ---------- Files ---------- */
 const Q=[],MAGIC=te.encode('ALF1'),fsz=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(1)+' KB':(n/1048576).toFixed(1)+' MB';
 const ico=n=>{const e=(n.split('.').pop()||'').toLowerCase();return/^(png|jpe?g|gif|webp|svg|bmp|heic|avif|ico|tiff?)$/.test(e)?'🖼️':/^(mp4|mov|mkv|avi|webm|m4v)$/.test(e)?'🎞️':/^(mp3|wav|flac|ogg|m4a|aac)$/.test(e)?'🎵':/^(zip|rar|7z|tar|gz|bz2|xz)$/.test(e)?'🗜️':/^(pdf|docx?|xlsx?|pptx?|txt|md|rtf|odt|csv)$/.test(e)?'📄':/^(enc|alien)$/.test(e)?'🔒':'📁'};
@@ -239,9 +378,9 @@ function dlb(n,b){const a=document.createElement('a');a.href=URL.createObjectURL
 function pickFiles(){const i=document.createElement('input');i.type='file';i.multiple=true;i.onchange=()=>fAdd(i.files);i.click()}
 function fAdd(fs){for(const f of fs)Q.push({f});fDraw();$('fz').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
 function fDraw(){const l=$('fl');l.textContent='';for(const q of Q){const d=document.createElement('div'),a=document.createElement('span'),b=document.createElement('div'),n=document.createElement('b'),m=document.createElement('small'),nm=q.res?q.res.name:q.base||q.f.name;d.className='fi';a.className='fx';b.className='fn';
- a.textContent=q.dir&&!q.res?'📂':ico(nm);n.textContent=nm;m.textContent=fsz(q.f.size)+(q.dir?' · '+q.dir.length+' files':'')+' · '+(q.msg||(/\.(enc|alien)$/.test(nm)?'Ready to decrypt':'Ready → '+nm+($('al').checked?'.enc.alien':'.enc')));if(q.err)m.className='er';b.append(n,m);d.append(a,b);
- if(q.res){const s=document.createElement('button');s.className='btn s';s.textContent='Save';s.onclick=()=>dlb(q.res.name,q.res.blob);d.append(s)}
- const x=document.createElement('button');x.className='btn t';x.textContent='✕';x.title='Remove';x.onclick=()=>{Q.splice(Q.indexOf(q),1);fDraw()};d.append(x);l.append(d)}smart()}
+ a.textContent=q.dir&&!q.res?'📂':ico(nm);n.textContent=nm;m.textContent=fsz(q.f.size)+(q.dir?fmtT('filesCountSuffix',{n:locNum(q.dir.length)}):'')+' · '+(q.msg||(/\.(enc|alien)$/.test(nm)?TT('readyToDecrypt'):fmtT('readyArrow',{name:nm+($('al').checked?'.enc.alien':'.enc')})));if(q.err)m.className='er';b.append(n,m);d.append(a,b);
+ if(q.res){const s=document.createElement('button');s.className='btn s';s.textContent=TT('save');s.onclick=()=>dlb(q.res.name,q.res.blob);d.append(s)}
+ const x=document.createElement('button');x.className='btn t';x.textContent='✕';x.title=TT('remove');x.onclick=()=>{Q.splice(Q.indexOf(q),1);fDraw()};d.append(x);l.append(d)}smart()}
 /* folders: read, then pack into one store-only ZIP before encrypting */
 const CT=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
 const crc=b=>{let c=-1;for(let i=0;i<b.length;i++)c=CT[(c^b[i])&255]^(c>>>8);return(c^-1)>>>0};
@@ -254,13 +393,13 @@ async function zipStore(fl){const parts=[],cen=[];let off=0;
  const cs=catA(cen),z=new DataView(new ArrayBuffer(22));z.setUint32(0,0x06054b50,true);z.setUint16(8,fl.length,true);z.setUint16(10,fl.length,true);z.setUint32(12,cs.length,true);z.setUint32(16,off,true);
  return catA([...parts,cs,new Uint8Array(z.buffer)])}
 const mkDir=(name,fl)=>({name:name+'.zip',size:fl.reduce((n,x)=>n+x.file.size,0),async arrayBuffer(){return(await zipStore(fl)).buffer}});
-function fAddDir(name,fl){if(!fl.length)return toast('That folder is empty',1);Q.push({f:mkDir(name,fl),base:name,dir:fl});fDraw();$('fz').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
+function fAddDir(name,fl){if(!fl.length)return toast(TT('errEmptyFolder'),1);Q.push({f:mkDir(name,fl),base:name,dir:fl});fDraw();$('fz').scrollIntoView({behavior:RM?'auto':'smooth',block:'nearest'})}
 async function walk(d,p,out){const r=d.createReader();for(;;){const b=await new Promise((ok,no)=>r.readEntries(ok,no));if(!b.length)break;for(const c of b){if(c.isFile)out.push({path:p+'/'+c.name,file:await new Promise((ok,no)=>c.file(ok,no))});else await walk(c,p+'/'+c.name,out)}}}
 async function fDrop(dt){const en=[...(dt.items||[])].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean);if(!en.length)return fAdd(dt.files);
  const loose=[];for(const e of en){if(e.isFile)loose.push(await new Promise((ok,no)=>e.file(ok,no)));else{const fl=[];await walk(e,e.name,fl);fAddDir(e.name,fl)}}if(loose.length)fAdd(loose)}
 function pickFolder(){const i=document.createElement('input');i.type='file';i.webkitdirectory=true;i.onchange=()=>{const m=new Map();for(const f of i.files){const p=f.webkitRelativePath||f.name,r=p.split('/')[0];if(!m.has(r))m.set(r,[]);m.get(r).push({path:p,file:f})}for(const[r,l]of m)fAddDir(r,l)};i.click()}
 function syncAl(){$('ka').checked=$('al').checked;for(const b of document.querySelectorAll('#fmt button')){const v=(b.dataset.v=='1')==$('al').checked;b.setAttribute('aria-selected',v);b.tabIndex=v?0:-1}fDraw()}
-async function fEncOne(q,alien){if(q.f.size>5e8)throw new E('File over 500 MB.');if(alien&&q.f.size>3e7)throw new E('Too big for alien script (30 MB). Turn it off.');
+async function fEncOne(q,alien){if(q.f.size>5e8)throw new E(TT('errFolderTooBig'));if(alien&&q.f.size>3e7)throw new E(TT('errAlienTooBig'));
  const nm=te.encode(q.f.name),body=cat(Uint8Array.of(nm.length>>8,nm.length&255),nm,new Uint8Array(await q.f.arrayBuffer()));let head,raw;
  if(mode=='aes'){const k=secret();if(isHex(k))raw=await sealB(body,unhex(k));else{const s=rand(16);raw=await sealB(body,await kdf(k,s),s)}head=Uint8Array.of(0)}
  else{const k=rand(32),w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,k));raw=await sealB(body,k);head=cat(Uint8Array.of(1,w.length>>8,w.length&255),w)}
@@ -270,14 +409,14 @@ async function fDecOne(q){if(q.dir)fail('format');if(same(new Uint8Array(await q
  if(m==1){const l=b[5]<<8|b[6];try{key=new Uint8Array(await crypto.subtle.decrypt({name:'RSA-OAEP'},priv,b.slice(7,7+l)))}catch{fail('wrongR')}p=7+l}
  const pt=await openB(b.slice(p),async s=>{if(m==1)return key;const k=secret();return s?kdf(k,s):isHex(k)?unhex(k):legacy(k)}),nl=pt[0]<<8|pt[1];
  q.res={name:safeName(td.decode(pt.subarray(2,2+nl))),blob:new Blob([pt.subarray(2+nl)])}}
-async function fRun(dec){if(!Q.length)throw new E('Add some files first.');if(mode=='aes')secret();else if(dec?!priv:!pub)throw new E(dec?'Add your private key first.':'Add a public key first, or generate a key pair.');
- const al=$('al').checked;let ok=0;for(const q of Q){q.res=null;q.err=0;q.msg=dec?'Decrypting…':'Encrypting…';fDraw();await new Promise(r=>setTimeout(r,20));
-  try{await(dec?fDecOne(q):fEncOne2(q,al));q.msg=dec?'Decrypted':'Encrypted · '+fsz(q.res.blob.size);ok++;if($('fas').checked)dlb(q.res.name,q.res.blob)}catch(e){q.err=1;q.msg=e instanceof E?e.message:'Failed: '+e.message}fDraw()}
- status(ok+' of '+Q.length+' file(s) '+(dec?'decrypted':'encrypted')+'.',ok?'ok':'err')}
+async function fRun(dec){if(!Q.length)throw new E(TT('errAddFiles'));if(mode=='aes')secret();else if(dec?!priv:!pub)throw new E(dec?TT('errAddPriv'):TT('errAddPub'));
+ const al=$('al').checked;let ok=0;for(const q of Q){q.res=null;q.err=0;q.msg=dec?TT('statusDecrypting'):TT('statusEncrypting');fDraw();await new Promise(r=>setTimeout(r,20));
+  try{await(dec?fDecOne(q):fEncOne2(q,al));q.msg=dec?TT('fileDecryptedTag'):fmtT('fileEncryptedSize',{sz:fsz(q.res.blob.size)});ok++;if($('fas').checked)dlb(q.res.name,q.res.blob)}catch(e){q.err=1;q.msg=e instanceof E?e.message:TT('failedPrefix')+e.message}fDraw()}
+ status(fmtT(dec?'filesResultDec':'filesResultEnc',{ok:locNum(ok),total:locNum(Q.length)}),ok?'ok':'err')}
 /* ---------- Big files (chunked), compression, smart decrypt, QR, vault ---------- */
 const M2=te.encode('ALF2');
 async function* chunks(rs,n){const r=rs.getReader();let buf=[],len=0;for(;;){const{done,value}=await r.read();if(value){buf.push(value);len+=value.length}while(len>=n||(done&&len)){const all=catA(buf),t=Math.min(n,all.length);yield all.slice(0,t);const rest=all.slice(t);buf=rest.length?[rest]:[];len=rest.length}if(done)return}}
-async function fEncOne2(q,alien){const dir=!!q.dir;if(dir&&q.f.size>5e8)throw new E('Folder over 500 MB.');if(q.f.size>4e9)throw new E('File over 4 GB.');if(alien&&q.f.size>3e7)throw new E('Too big for alien script (30 MB). Turn it off.');
+async function fEncOne2(q,alien){const dir=!!q.dir;if(dir&&q.f.size>5e8)throw new E(TT('errFolderTooBig'));if(q.f.size>4e9)throw new E(TT('errFileTooBig'));if(alien&&q.f.size>3e7)throw new E(TT('errAlienTooBig'));
  const zip=$('fcz').checked,m=mode=='rsa'?1:isHex(secret())?0:2;let key,head;
  if(m==1){key=rand(32);const w=new Uint8Array(await crypto.subtle.encrypt({name:'RSA-OAEP'},pub,key));head=cat(Uint8Array.of(1,w.length>>8,w.length&255),w)}
  else if(m==0){key=unhex(secret());head=Uint8Array.of(0)}
@@ -306,59 +445,60 @@ function kxRepack(){for(const id of['ko','kb']){const v=$(id).value.trim();if(v)
 $('ka').onchange=()=>{$('al').checked=$('ka').checked;$('al').dispatchEvent(new Event('change'))};
 /* Master key vault: encrypted with a password you choose (PBKDF2 600k + AES-256-GCM), stored only in this browser */
 function askPw(title,conf){return new Promise(ok=>{const d=$('vd');$('vt').textContent=title;$('vpw2').hidden=!conf;$('vpw').value=$('vpw2').value='';$('ve').textContent='';
- const done=v=>{d.close();ok(v)};$('vgo').onclick=()=>{const p=$('vpw').value;if(!p){$('ve').textContent='Enter the password.';return}if(conf&&p.length<8){$('ve').textContent='Use at least 8 characters.';return}if(conf&&p!==$('vpw2').value){$('ve').textContent='The two passwords differ.';return}done(p)};
+ const done=v=>{d.close();ok(v)};$('vgo').onclick=()=>{const p=$('vpw').value;if(!p){$('ve').textContent=TT('vaultEnterPw');return}if(conf&&p.length<8){$('ve').textContent=TT('vaultMin8');return}if(conf&&p!==$('vpw2').value){$('ve').textContent=TT('vaultMismatch');return}done(p)};
  $('vno').onclick=()=>done(null);d.oncancel=()=>ok(null);d.showModal();$('vpw').focus()})}
 for(const i of['vpw','vpw2'])$(i).addEventListener('keydown',e=>{if(e.key=='Enter')$('vgo').click()});
-async function lockMaster(k){const pw=await askPw('Choose a vault password',true);if(!pw)return;await run('Locking master key…',async()=>{const s=rand(16);st.set('alien_vault',b64(await sealB(te.encode(k),await kdf(pw,s),s)));st.del('alien_master_key');master();toast('Master key locked and saved')})}
-async function unlockMaster(){const pw=await askPw('Unlock master key',false);if(!pw)return;await run('Unlocking…',async()=>{let r;try{r=await open(unb64(st.get('alien_vault')),s=>kdf(pw,s))}catch{throw new E('Wrong vault password.')}$('key').value=r.text;hint();toast('Master key loaded')})}
+async function lockMaster(k){const pw=await askPw(TT('vaultChooseTitle'),true);if(!pw)return;await run(TT('statusLocking'),async()=>{const s=rand(16);st.set('alien_vault',b64(await sealB(te.encode(k),await kdf(pw,s),s)));st.del('alien_master_key');master();toast(TT('toastMasterLocked'))})}
+async function unlockMaster(){const pw=await askPw(TT('vaultUnlockTitle'),false);if(!pw)return;await run(TT('statusUnlocking'),async()=>{let r;try{r=await open(unb64(st.get('alien_vault')),s=>kdf(pw,s))}catch{throw new E(TT('vaultWrong'))}$('key').value=r.text;hint();toast(TT('toastMasterLoaded'))})}
 /* QR: shows the code as Base64 in a QR; scans with camera or image. Libraries load from a local file first, then the CDN */
 const loadJS=urls=>new Promise((ok,no)=>{const t=u=>{if(!u)return no();const s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=()=>{s.remove();t(urls.shift())};document.head.append(s)};t(urls.shift())});
 let cam=null,scanT='';
 const stopCam=()=>{if(cam){cam.getTracks().forEach(t=>t.stop());cam=null}};$('qd').addEventListener('close',stopCam);
-async function qrShow(id){try{if(!$(id).value.trim())throw new E('Nothing to show yet.');const raw=unpack($(id).value);
- if(!window.qrcode)await loadJS(['qrcode.js','https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js']).catch(()=>{throw new E('QR library not found. Save qrcode.js next to this page, or go online.')});
- const q=qrcode(0,'L');q.addData(b64(raw));q.make();$('qi').src=q.createDataURL(5,8);$('qv').hidden=false;$('qc').hidden=true;$('qd').showModal()}catch(e){toast(e.message||'QR failed',1)}}
+async function qrShow(id){try{if(!$(id).value.trim())throw new E(TT('errNothingShow'));const raw=unpack($(id).value);
+ if(!window.qrcode)await loadJS(['qrcode.js','https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js']).catch(()=>{throw new E(TT('errQRLibMissing'))});
+ const q=qrcode(0,'L');q.addData(b64(raw));q.make();$('qi').src=q.createDataURL(5,8);$('qv').hidden=false;$('qc').hidden=true;$('qd').showModal()}catch(e){toast(e.message||TT('qrFailed'),1)}}
 async function decQR(src){if('BarcodeDetector' in window){try{const r=await new BarcodeDetector({formats:['qr_code']}).detect(src);if(r[0])return r[0].rawValue}catch{}}
  if(!window.jsQR)await loadJS(['jsQR.js','https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js']).catch(()=>{});if(!window.jsQR)return null;
  const w=src.videoWidth||src.width,h=src.videoHeight||src.height,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d',{willReadFrequently:true});x.drawImage(src,0,0,w,h);const r=jsQR(x.getImageData(0,0,w,h).data,w,h);return r&&r.data}
-function gotQR(t){stopCam();$('qd').close();$(scanT).value=t;$(scanT).dispatchEvent(new Event('input'));toast('QR read')}
-async function qrScan(id){scanT=id;$('qv').hidden=true;$('qc').hidden=false;$('qm').textContent='Point the camera at the QR code.';$('qd').showModal();
+function gotQR(t){stopCam();$('qd').close();$(scanT).value=t;$(scanT).dispatchEvent(new Event('input'));toast(TT('toastQrRead'))}
+async function qrScan(id){scanT=id;$('qv').hidden=true;$('qc').hidden=false;$('qm').textContent=TT('qrPoint');$('qd').showModal();
  try{cam=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('qvid');v.srcObject=cam;await v.play();const tick=async()=>{if(!cam)return;if(v.readyState>=2){const t=await decQR(v);if(t)return gotQR(t)}setTimeout(tick,250)};tick()}
- catch{$('qm').textContent='Camera not available. Choose an image instead.'}}
-function qrImg(){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=async()=>{const f=i.files[0];if(!f)return;const t=await decQR(await createImageBitmap(f));t?gotQR(t):$('qm').textContent='No QR code found in that image.'};i.click()}
-function confirmBox(t,m,ok){return new Promise(r=>{const d=$('cd');$('ct').textContent=t;$('cb').textContent=m;$('cy').textContent=ok||'Confirm';const done=v=>{d.close();r(v)};$('cy').onclick=()=>done(true);$('cn').onclick=()=>done(false);d.oncancel=()=>r(false);d.showModal();$('cn').focus()})}
+ catch{$('qm').textContent=TT('cameraUnavailable')}}
+function qrImg(){const i=document.createElement('input');i.type='file';i.accept='image/*';i.onchange=async()=>{const f=i.files[0];if(!f)return;const t=await decQR(await createImageBitmap(f));t?gotQR(t):$('qm').textContent=TT('qrNotFound')};i.click()}
+function confirmBox(t,m,ok){return new Promise(r=>{const d=$('cd');$('ct').textContent=t;$('cb').textContent=m;$('cy').textContent=ok||TT('confirmBtn');const done=v=>{d.close();r(v)};$('cy').onclick=()=>done(true);$('cn').onclick=()=>done(false);d.oncancel=()=>r(false);d.showModal();$('cn').focus()})}
 /* Key exchange follows the format of the code you receive (glyphs or Base64) */
 const fmtOf=t=>{t=t.trim();return t.length<20?null:isG(t)?true:/^[A-Za-z0-9+/=\s]+$/.test(t)?false:null};
-function kxFollow(id){const f=fmtOf($(id).value);if(f!==null&&f!==$('al').checked){$('al').checked=f;$('al').dispatchEvent(new Event('change'));toast(f?'Switched to alien glyphs to match':'Switched to Base64 to match')}}
+function kxFollow(id){const f=fmtOf($(id).value);if(f!==null&&f!==$('al').checked){$('al').checked=f;$('al').dispatchEvent(new Event('change'));toast(f?TT('toastSwitchedAlien'):TT('toastSwitchedBase64'))}}
 $('kt').addEventListener('input',()=>kxFollow('kt'));$('kr').addEventListener('input',()=>kxFollow('kr'));
 const A={
- theme(){const d=document.documentElement,n=d.dataset.theme=='dark'?'light':'dark';d.dataset.theme=n;st.set('alien_theme',n);$('thm').textContent=n=='dark'?'Light':'Dark'},
- eye(b){const k=$('key'),s=k.type=='password';k.type=s?'text':'password';b.textContent=s?'Hide':'Show'},
+ theme(){const d=document.documentElement,n=d.dataset.theme=='dark'?'light':'dark';d.dataset.theme=n;st.set('alien_theme',n);$('thm').textContent=n=='dark'?TT('themeLight'):TT('themeDark')},
+ lang(){curLang=curLang=='fa'?'en':'fa';st.set('alien_lang',curLang);applyLang()},
+ eye(b){const k=$('key'),s=k.type=='password';k.type=s?'text':'password';b.textContent=s?TT('hide'):TT('show')},
  pasteKey(){paste($('key'))},copyKey(){copy($('key').value)},
- gen(){$('key').value=hex(rand(32));$('key').type='text';document.querySelector('[data-a=eye]').textContent='Hide';hint();toast('Random key made. Store it safely; messages need it.')},
- mSave(){const k=$('key').value.trim();if(!k)return toast('Enter a key first',1);lockMaster(k)},mLock(){lockMaster(st.get('alien_master_key'))},
+ gen(){$('key').value=hex(rand(32));$('key').type='text';document.querySelector('[data-a=eye]').textContent=TT('hide');hint();toast(TT('toastRandomKeyMade'))},
+ mSave(){const k=$('key').value.trim();if(!k)return toast(TT('toastEnterKeyFirst'),1);lockMaster(k)},mLock(){lockMaster(st.get('alien_master_key'))},
  mUse(){unlockMaster()},
- mDel(){confirmBox('Forget master key?','The saved master key will be deleted from this browser. This cannot be undone.','Forget').then(y=>{if(y){st.del('alien_vault');st.del('alien_master_key');master();toast('Master key removed')}})},
- genRsa(){run('Generating RSA-2048 keys…',async()=>{const k=await crypto.subtle.generateKey({...OA,modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']);pub=k.publicKey;priv=k.privateKey;
-  $('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY');$('priv').value=pem(await crypto.subtle.exportKey('pkcs8',priv),'PRIVATE KEY');delete $('pp').dataset.bad;delete $('vp').dataset.bad;pills();status('Key pair ready.','ok')})},
- pem(){pick('.pem,.key,.txt,text/plain',async t=>{const b=unpem(t,'PRIVATE KEY')?'priv':null,c=unpem(t,'PUBLIC KEY')?'pub':null;if(!b&&!c)return toast('No PEM key found in that file',1);
+ mDel(){confirmBox(TT('forgetConfirmTitle'),TT('forgetConfirmBody'),TT('forgetConfirmOk')).then(y=>{if(y){st.del('alien_vault');st.del('alien_master_key');master();toast(TT('toastMasterRemoved'))}})},
+ genRsa(){run(TT('statusGenRsa'),async()=>{const k=await crypto.subtle.generateKey({...OA,modulusLength:2048,publicExponent:new Uint8Array([1,0,1])},true,['encrypt','decrypt']);pub=k.publicKey;priv=k.privateKey;
+  $('pub').value=pem(await crypto.subtle.exportKey('spki',pub),'PUBLIC KEY');$('priv').value=pem(await crypto.subtle.exportKey('pkcs8',priv),'PRIVATE KEY');delete $('pp').dataset.bad;delete $('vp').dataset.bad;pills();status(TT('statusGenRsaDone'),'ok')})},
+ pem(){pick('.pem,.key,.txt,text/plain',async t=>{const b=unpem(t,'PRIVATE KEY')?'priv':null,c=unpem(t,'PUBLIC KEY')?'pub':null;if(!b&&!c)return toast(TT('toastNoPem'),1);
   if(c)$('pub').value=t.match(/-----BEGIN PUBLIC KEY-----[\s\S]*?-----END PUBLIC KEY-----/)[0];if(b)$('priv').value=t.match(/-----BEGIN PRIVATE KEY-----[\s\S]*?-----END PRIVATE KEY-----/)[0];
-  if(c)await keyText('pub');if(b)await keyText('priv');toast('Key imported')})},
- saveKeys(){const a=$('priv').value.trim(),b=$('pub').value.trim();if(!a&&!b)return toast('No keys to save',1);if(a)dl('private_key.pem',a);if(b)setTimeout(()=>dl('public_key.pem',b),300);toast('Saved. Keep private_key.pem secret.')},
+  if(c)await keyText('pub');if(b)await keyText('priv');toast(TT('toastKeyImported'))})},
+ saveKeys(){const a=$('priv').value.trim(),b=$('pub').value.trim();if(!a&&!b)return toast(TT('toastNoKeysSave'),1);if(a)dl('private_key.pem',a);if(b)setTimeout(()=>dl('public_key.pem',b),300);toast(TT('toastKeysSaved'))},
  cp(b){copy($(b.dataset.t).value)},pst(b){paste($(b.dataset.t))},
- showPriv(b){const s=$('priv').classList.toggle('show');b.textContent=s?'Hide':'Reveal'},
- open(){pickFiles()},wipeAsk(){confirmBox('Wipe everything on this page?','Keys, messages, files and key-exchange codes will be cleared from this page. Your saved master key is not affected.','Wipe').then(y=>y&&A.wipe())},qShow(b){qrShow(b.dataset.t)},qScan(b){qrScan(b.dataset.t)},qImg(){qrImg()},qClose(){$('qd').close()},fold(){pickFolder()},
- kxStart(){run('Making offer…',xStart)},kxRespond(){run('Making reply…',xRespond)},kxFinish(){run('Finishing…',xFinish)},
- kxUse(){if(!kxSecret)return;$('key').value=hex(kxSecret);$('key').type='text';document.querySelector('[data-a=eye]').textContent='Hide';hint();setMode('aes');toast('Shared secret set as your key')},
- kxCopy(){kxSecret?copy(hex(kxSecret)):toast('No secret yet')},
- fEnc(){run('Encrypting files…',()=>fRun(false))},fDec(){run('Decrypting files…',()=>fRun(true))},
- fAll(){const r=Q.filter(q=>q.res);if(!r.length)return toast('Nothing to save yet');r.forEach((q,i)=>setTimeout(()=>dlb(q.res.name,q.res.blob),i*400))},fClr(){Q.length=0;fDraw()},
- enc(){run('Encrypting…',encrypt)},dec(){run('Decrypting…',decrypt)},
+ showPriv(b){const s=$('priv').classList.toggle('show');b.textContent=s?TT('hide'):TT('reveal')},
+ open(){pickFiles()},wipeAsk(){confirmBox(TT('wipeConfirmTitle'),TT('wipeConfirmBody'),TT('wipeConfirmOk')).then(y=>y&&A.wipe())},qShow(b){qrShow(b.dataset.t)},qScan(b){qrScan(b.dataset.t)},qImg(){qrImg()},qClose(){$('qd').close()},fold(){pickFolder()},
+ kxStart(){run(TT('statusMakingOffer'),xStart)},kxRespond(){run(TT('statusMakingReply'),xRespond)},kxFinish(){run(TT('statusFinishing'),xFinish)},
+ kxUse(){if(!kxSecret)return;$('key').value=hex(kxSecret);$('key').type='text';document.querySelector('[data-a=eye]').textContent=TT('hide');hint();setMode('aes');toast(TT('toastKxSetKey'))},
+ kxCopy(){kxSecret?copy(hex(kxSecret)):toast(TT('toastNoSecretYet'))},
+ fEnc(){run(TT('statusEncryptingFiles'),()=>fRun(false))},fDec(){run(TT('statusDecryptingFiles'),()=>fRun(true))},
+ fAll(){const r=Q.filter(q=>q.res);if(!r.length)return toast(TT('toastNothingSaveYet'));r.forEach((q,i)=>setTimeout(()=>dlb(q.res.name,q.res.blob),i*400))},fClr(){Q.length=0;fDraw()},
+ enc(){run(TT('statusEncrypting'),encrypt)},dec(){run(TT('statusDecrypting'),decrypt)},
  swap(){const a=$('inp').value,b=out;$('inp').value=b;show(a,isG(a)||/^[A-Za-z0-9+/=\s]{60,}$/.test(a)?'cipher':'text');status('')},
  clr(){$('inp').value='';show('','text');status('')},
- wipe(){for(const i of['key','pub','priv','inp'])$(i).value='';pub=priv=kxS=kxSecret=null;for(const i of['ko','kr','kt','kb'])$(i).value='';$('kres').hidden=true;Q.length=0;fDraw();show('','text');status('');hint();pills();toast('Cleared from this page')},
- share(){out?navigator.share({text:out}).catch(()=>{}):toast('Nothing to share')},
- copyOut(){copy(out)},save(){out?dl('alien-message.txt',out):toast('Nothing to save')}};
+ wipe(){for(const i of['key','pub','priv','inp'])$(i).value='';pub=priv=kxS=kxSecret=null;for(const i of['ko','kr','kt','kb'])$(i).value='';$('kres').hidden=true;Q.length=0;fDraw();show('','text');status('');hint();pills();toast(TT('toastClearedPage'))},
+ share(){out?navigator.share({text:out}).catch(()=>{}):toast(TT('toastNothingShare'))},
+ copyOut(){copy(out)},save(){out?dl('alien-message.txt',out):toast(TT('toastNothingSave'))}};
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b)A[b.dataset.a](b)});
 document.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('[data-m]');if(b)setMode(b.dataset.m)});
 document.querySelector('.seg').addEventListener('keydown',e=>{if(e.key!='ArrowLeft'&&e.key!='ArrowRight')return;const o=['aes','rsa','kx'],m=o[(o.indexOf(mode)+(e.key=='ArrowRight'?1:2))%3];setMode(m);$('t-'+m).focus();e.preventDefault()});
@@ -370,13 +510,12 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');fD
 const zn=$('dzn');zn.onclick=pickFiles;zn.onkeydown=e=>{if(e.key=='Enter'||e.key==' '){e.preventDefault();pickFiles()}};zn.addEventListener('dragover',e=>{e.preventDefault();zn.classList.add('drag')});zn.addEventListener('dragleave',()=>zn.classList.remove('drag'));zn.addEventListener('drop',e=>{e.preventDefault();zn.classList.remove('drag');fDrop(e.dataTransfer)});
 $('al').checked=st.get('alien_script')!=='0';$('al').addEventListener('change',()=>{st.set('alien_script',$('al').checked?'1':'0');syncAl();kxRepack()});for(const b of document.querySelectorAll('#fmt button'))b.onclick=()=>{$('al').checked=b.dataset.v=='1';$('al').dispatchEvent(new Event('change'))};syncAl();
 $('shr').hidden=!navigator.share;$('ik').checked=st.get('alien_idle')==='1';$('ik').addEventListener('change',()=>st.set('alien_idle',$('ik').checked?'1':'0'));
-let idle;['pointerdown','keydown','input'].forEach(v=>addEventListener(v,()=>{clearTimeout(idle);if($('ik').checked)idle=setTimeout(()=>{A.wipe();toast('Cleared after 5 minutes idle')},3e5)},{passive:true}));
-$('thm').textContent=document.documentElement.dataset.theme=='dark'?'Light':'Dark';
-setMode(st.get('alien_mode')=='rsa'?'rsa':'aes');hint();master();pills();count();
+let idle;['pointerdown','keydown','input'].forEach(v=>addEventListener(v,()=>{clearTimeout(idle);if($('ik').checked)idle=setTimeout(()=>{A.wipe();toast(TT('toastIdleCleared'))},3e5)},{passive:true}));
+setMode(st.get('alien_mode')=='rsa'?'rsa':'aes');applyLang();
 addEventListener('dragover',e=>e.preventDefault());
-addEventListener('drop',e=>{e.preventDefault();if(e.target.closest&&e.target.closest('.pi,#dzn'))return;if(mode=='kx')return toast('Switch to Passphrase or Key pair to encrypt files',1);fDrop(e.dataTransfer)});
+addEventListener('drop',e=>{e.preventDefault();if(e.target.closest&&e.target.closest('.pi,#dzn'))return;if(mode=='kx')return toast(TT('errSwitchModeFiles'),1);fDrop(e.dataTransfer)});
 addEventListener('beforeunload',e=>{if(kxS)e.preventDefault()});
-if(!crypto.subtle)status('Encryption needs a secure context: open this file over https or localhost.','err');
+if(!crypto.subtle)status(TT('errSecureContext'),'err');
 </script>
 </body>
 </html>
